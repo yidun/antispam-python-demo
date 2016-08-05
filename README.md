@@ -7,9 +7,13 @@ http://dun.163.com
 
 ```
 .
-├── text_check_api_demo.py 文本在线检测接口演示
-├── text_check_callback_demo.py 文本离线结果获取接口演示
-├── image_check_api_demo.py 图片在线检测接口演示
-├── image_check_callback_demo.py 图片离线结果获取接口演示
+├── image
+│   ├── callback.py 图片离线结果获取接口演示
+│   └── check.py 图片在线检测接口演示
+├── livevideo
+├── README.md
+└── text
+    ├── callback.py 文本离线结果获取接口演示
+    └── check.py 文本在线检测接口演示
 
 ```
