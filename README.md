@@ -6,14 +6,19 @@ http://dun.163.com
 - 文件说明
 
 ```
-.
-├── image
-│   ├── callback.py 图片离线结果获取接口演示
-│   └── check.py 图片在线检测接口演示
-├── livevideo
-├── README.md
-└── text
-    ├── callback.py 文本离线结果获取接口演示
-    └── check.py 文本在线检测接口演示
 
+.
+├── image 图片接口演示
+│   ├── callback.py
+│   └── check.py
+├── livevideo 视频直播流接口
+│   ├── callback.py
+│   └── check.py
+├── README.md
+└── text 文本接口演示
+    ├── callback.py
+    └── check.py
 ```
+
+## 使用说明
+- demo仅做接口演示使用，生产环境接入请根据实际情况增加异常处理逻辑。
