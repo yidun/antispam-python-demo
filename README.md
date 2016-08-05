@@ -13,7 +13,7 @@ http://dun.163.com
 │   └── check.py
 ├── livevideo 视频直播流接口
 │   ├── callback.py
-│   └── check.py
+│   └── submit.py
 ├── README.md
 └── text 文本接口演示
     ├── callback.py

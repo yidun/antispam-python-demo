@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""易盾视频直播流在线检测接口python示例代码
+"""易盾视频直播流信息提交接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python2.7
 运行:
@@ -19,7 +19,7 @@ import urllib2
 import json
 
 class LiveVideoAPIDemo(object):
-    """视频直播流在线检测接口示例代码"""
+    """视频直播流信息提交接口示例代码"""
     API_URL = "https://api.aq.163.com/v2/livevideo/submit"
     VERSION = "v2"
 
