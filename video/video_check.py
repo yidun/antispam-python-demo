@@ -19,7 +19,7 @@ import urllib2
 import json
 
 class VideoAPIDemo(object):
-    """视频直播流在线检测接口示例代码"""
+    """视频检测接口示例代码"""
     API_URL = "https://api.aq.163.com/v2/video/submit"
     VERSION = "v2"
 
@@ -84,6 +84,6 @@ if __name__ == "__main__":
 
     ret = api.check(params)
     if ret["code"] == 200:
-        print "提交视频直播流结果: %s" % ret["result"]
+        print "提交结果: %s" % ret["result"]
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
