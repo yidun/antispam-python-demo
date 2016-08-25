@@ -19,7 +19,7 @@ import urllib2
 import json
 
 class VideoCallbackAPIDemo(object):
-    """视频直播流离线检测结果获取接口示例代码"""
+    """视频检测结果获取接口示例代码"""
     API_URL = "https://api.aq.163.com/v2/video/callback/results"
     VERSION = "v2"
 
