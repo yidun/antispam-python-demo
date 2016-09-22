@@ -21,7 +21,7 @@ import json
 class TextCheckCallbackAPIDemo(object):
     """文本离线检测结果获取接口示例代码"""
     API_URL = "https://api.aq.163.com/v2/text/callback/results"
-    VERSION = "v1"
+    VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
