@@ -21,7 +21,7 @@ import json
 class TextCheckAPIDemo(object):
     """文本在线检测接口示例代码"""
     API_URL = "https://api.aq.163.com/v2/text/check"
-    VERSION = "v1"
+    VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
