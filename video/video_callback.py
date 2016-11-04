@@ -20,8 +20,8 @@ import json
 
 class VideoCallbackAPIDemo(object):
     """视频检测结果获取接口示例代码"""
-    API_URL = "https://api.aq.163.com/v2/video/callback/results"
-    VERSION = "v2"
+    API_URL = "https://api.aq.163.com/v3/video/callback/results"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -79,10 +79,10 @@ if __name__ == "__main__":
 
     if ret["code"] == 200:
         for result in ret["result"]:
-            labels = result["labels"]
-            if labels: # 返回labels不为空表示有问题
-                print "evidence = %s" % result["evidence"]
-                for label in labels:
-                    print "label = %s, level = %s, rate = %s" % (label["label"], label["level"], label["rate"])
+            level = result['level']
+            if level != 0: # 返回 level == 0表示正常
+                # 从evidences里获取证据信息，详细说明见http://dun.163.com/support/api#API_13
+                for evidence in result['evidences']:
+                    print evidence
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
