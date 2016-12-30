@@ -20,8 +20,8 @@ import json
 
 class TextCheckAPIDemo(object):
     """文本在线检测接口示例代码"""
-    API_URL = "https://api.aq.163.com/v2/text/check"
-    VERSION = "v2"
+    API_URL = "https://api.aq.163.com/v3/text/check"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -91,11 +91,13 @@ if __name__ == "__main__":
     ret = text_api.check(params)
     if ret["code"] == 200:
         action = ret["result"]["action"]
-        if action == 1:
-            print "内容正常，通过"
+        taskId = ret["result"]["taskId"]
+        labelArray=json.dumps(ret["result"]["labels"],ensure_ascii=False)
+        if action == 0:
+            print "taskId=%s，文本机器检测结果：通过" % (taskId)
+        elif action == 1:
+            print "taskId=%s，文本机器检测结果：嫌疑，需人工复审，分类信息如下：%s" %(taskId,labelArray)
         elif action == 2:
-            print "垃圾内容，删除"
-        elif action == 3:
-            print "嫌疑内容"
+            print "taskId=%s，文本机器检测结果：不通过，分类信息如下：%s" % (taskId,labelArray)
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])

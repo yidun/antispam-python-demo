@@ -18,9 +18,9 @@ import urllib
 import urllib2
 import json
 
-class TextCheckCallbackAPIDemo(object):
-    """文本离线检测结果获取接口示例代码"""
-    API_URL = "https://api.aq.163.com/v3/text/callback/results"
+class TextQueryByTaskIdsDemo(object):
+    """文本离线查询结果获取接口示例代码"""
+    API_URL = "https://api.aq.163.com/v1/text/query/task"
     VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -47,12 +47,13 @@ class TextCheckCallbackAPIDemo(object):
         buff += self.secret_key
         return hashlib.md5(buff).hexdigest()
 
-    def check(self):
+    def query(self,params):
         """请求易盾接口
+        Args:
+            params (object) 请求参数
         Returns:
             请求结果，json格式
         """
-        params = {}
         params["secretId"] = self.secret_id
         params["businessId"] = self.business_id
         params["version"] = self.VERSION
@@ -69,25 +70,27 @@ class TextCheckCallbackAPIDemo(object):
             print "调用API接口失败:", str(ex)
 
 if __name__ == "__main__":
-    
     """示例代码入口"""
     SECRET_ID = "your_secret_id" # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key" # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id" # 业务ID，易盾根据产品业务特点分配
-    text_check_callback_api = TextCheckCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    text_query_api = TextQueryByTaskIdsDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
     
-    ret = text_check_callback_api.check()
+    taskIds = ['f874be29bb5743ebbeb74799b1933061', '76253c3ce34043e099419be9903eca1b'] #查询参数 taskids
+    params = {
+        "taskIds": taskIds
+    }
+    ret = text_query_api.query(params)
     if ret["code"] == 200:
-        if len(ret["result"])==0:
-            print "暂时没有人工复审结果需要获取，请稍后重试！"
-        else:
-            for result in ret["result"]:
-                taskId = result["taskId"]
-                callback=result["callback"]
-                labelArray=json.dumps(result["labels"],ensure_ascii=False)
-                if result["action"]==0:
-                    print "taskId=%s，callback=%s，文本人工复审结果：通过" %(taskId,callback)
-                else:
-                    print "taskId=%s，callback=%s，文本人工复审结果：不通过，分类信息如下：%s" %(taskId,callback,labelArray)
+        for result in ret["result"]:
+            action = result["action"]
+            taskId = result["taskId"]
+            status = result["status"]
+            callback=result["callback"]
+            labelArray=json.dumps(result["labels"],ensure_ascii=False)
+            if action==0:
+                print "taskId=%s，status=%s，callback=%s，文本查询结果：通过" %(taskId,status,callback)
+            else:
+                print "taskId=%s，status=%s，callback=%s，文本查询结果：不通过，分类信息如下：%s" %(taskId,status,callback,labelArray)
     else:
         print "ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"])

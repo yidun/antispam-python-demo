@@ -20,8 +20,8 @@ import json
 
 class ImageCheckCallbackAPIDemo(object):
     """易盾图片离线检测结果获取接口示例代码"""
-    API_URL = "https://api.aq.163.com/v2/image/callback/results"
-    VERSION = "v2"
+    API_URL = "https://api.aq.163.com/v3/image/callback/results"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -78,14 +78,23 @@ if __name__ == "__main__":
     image_check_callback_api = ImageCheckCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     ret = image_check_callback_api.check()
-
-    # print json.dumps(ret)
     if ret["code"] == 200:
         results = ret["result"]
+        if len(results) == 0:
+            print "暂时没有人工复审结果需要获取，请稍后重试！ "
         for result in results:
-            name = result["name"]
-            print name
-            for label in result["labels"]:
-                print "---- label=%s, level=%s, rate=%s" % (label["label"], label["level"], label["rate"])
+            print "taskId=%s，name=%s，labels：" %(result["taskId"],result["name"])
+            maxLevel = -1
+            for labelObj in result["labels"]:
+                label = labelObj["label"]
+                level = labelObj["level"]
+                rate  = labelObj["rate"]
+                print "label:%s, level=%s, rate=%s" %(label, level, rate)
+                maxLevel =level if level > maxLevel else maxLevel
+            if maxLevel==0:
+                print "#图片人工复审结果：最高等级为\"正常\"\n"
+            elif maxLevel==2:
+                print "#图片人工复审结果：最高等级为\"确定\"\n"    
+            
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
