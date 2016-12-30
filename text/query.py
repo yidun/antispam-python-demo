@@ -90,7 +90,7 @@ if __name__ == "__main__":
             labelArray=json.dumps(result["labels"],ensure_ascii=False)
             if action==0:
                 print "taskId=%s，status=%s，callback=%s，文本查询结果：通过" %(taskId,status,callback)
-            else:
+            elif action==2:
                 print "taskId=%s，status=%s，callback=%s，文本查询结果：不通过，分类信息如下：%s" %(taskId,status,callback,labelArray)
     else:
         print "ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"])
