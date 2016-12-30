@@ -20,8 +20,8 @@ import json
 
 class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
-    API_URL = "https://api.aq.163.com/v2/image/check"
-    VERSION = "v2"
+    API_URL = "https://api.aq.163.com/v3/image/check"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -99,13 +99,23 @@ if __name__ == "__main__":
         "ip": "123.115.77.137"
     }
     ret = image_check_api.check(params)
-
     if ret["code"] == 200:
         results = ret["result"]
         for result in results:
-            name = result["name"]
-            print name
-            for label in result["labels"]:
-                print "---- label=%s, level=%s, rate=%s" % (label["label"], label["level"], label["rate"])
+            print "taskId=%s，name=%s，labels：" %(result["taskId"],result["name"])
+            maxLevel = -1
+            for labelObj in result["labels"]:
+                label = labelObj["label"]
+                level = labelObj["level"]
+                rate  = labelObj["rate"]
+                print "label:%s, level=%s, rate=%s" %(label, level, rate)
+                maxLevel =level if level > maxLevel else maxLevel
+            if maxLevel==0:
+                print "#图片机器检测结果：最高等级为\"正常\"\n"
+            elif maxLevel==1:
+                print "#图片机器检测结果：最高等级为\"嫌疑\"\n"
+            elif maxLevel==2:
+                print "#图片机器检测结果：最高等级为\"确定\"\n"    
+            
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
