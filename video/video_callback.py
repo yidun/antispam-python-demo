@@ -79,6 +79,11 @@ if __name__ == "__main__":
 
     if ret["code"] == 200:
         for result in ret["result"]:
+            status = result["status"]
+            if status!=0:  #异常，异常码定义见官网文档
+                print "视频异常，status=%s" %(status)
+                continue
+           
             level = result['level']
             if level != 0: # 返回 level == 0表示正常
                 # 从evidences里获取证据信息，详细说明见http://dun.163.com/support/api#API_13
