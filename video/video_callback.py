@@ -81,8 +81,8 @@ if __name__ == "__main__":
         for result in ret["result"]:
             status = result["status"];
             if status!=0:  #异常，异常码定义见官网文档
-                print "视频异常，status=%s" %(status);
-                continue;
+                print "视频异常，status=%s" %(status)
+                continue
            
             level = result['level']
             if level != 0: # 返回 level == 0表示正常
