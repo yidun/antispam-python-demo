@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     if ret["code"] == 200:
         for result in ret["result"]:
-            status = result["status"];
+            status = result["status"]
             if status!=0:  #异常，异常码定义见官网文档
                 print "视频异常，status=%s" %(status)
                 continue
