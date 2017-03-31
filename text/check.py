@@ -79,7 +79,6 @@ if __name__ == "__main__":
     params = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
         "content": "易盾测试内容！",
-        "dataOpType": "1",
 		"dataType": "1",
         "ip": "123.115.77.137",
         "account": "python@163.com",
