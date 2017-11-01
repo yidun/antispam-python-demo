@@ -81,9 +81,9 @@ if __name__ == "__main__":
 
     images = []
     imageurl = {
-        "name":"http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg",
+        "name":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
         "type":1,
-        "data":"http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg"
+        "data":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg"
     }
     imagebase64 = {
         "name":"{\"imageId\": 33451123, \"contentId\": 78978}",
