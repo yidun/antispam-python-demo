@@ -20,7 +20,7 @@ import json
 
 class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
-    API_URL = "https://api.aq.163.com/v3/image/check"
+    API_URL = "https://as.dun.163yun.com/v3/image/check"
     VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
