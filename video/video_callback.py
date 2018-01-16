@@ -21,7 +21,7 @@ import json
 class VideoCallbackAPIDemo(object):
     """视频检测结果获取接口示例代码"""
     API_URL = "https://api.aq.163.com/v3/video/callback/results"
-    VERSION = "v3"
+    VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
