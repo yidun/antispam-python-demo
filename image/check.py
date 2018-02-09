@@ -20,7 +20,8 @@ import json
 
 class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
-    API_URL = "https://api.aq.163.com/v3/image/check"
+
+    API_URL = "https://as.dun.163yun.com/v3/image/check"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -81,9 +82,9 @@ if __name__ == "__main__":
 
     images = []
     imageurl = {
-        "name":"http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg",
+        "name":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
         "type":1,
-        "data":"http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg"
+        "data":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg"
     }
     imagebase64 = {
         "name":"{\"imageId\": 33451123, \"contentId\": 78978}",

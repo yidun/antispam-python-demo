@@ -20,7 +20,7 @@ import json
 
 class TextQueryByTaskIdsDemo(object):
     """文本离线查询结果获取接口示例代码"""
-    API_URL = "https://api.aq.163.com/v1/text/query/task"
+    API_URL = "https://as.dun.163yun.com/v1/text/query/task"
     VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):

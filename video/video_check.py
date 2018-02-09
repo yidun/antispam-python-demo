@@ -20,8 +20,8 @@ import json
 
 class VideoAPIDemo(object):
     """视频检测接口示例代码"""
-    API_URL = "https://api.aq.163.com/v2/video/submit"
-    VERSION = "v2"
+    API_URL = "https://as.dun.163yun.com/v3/video/submit"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -84,6 +84,9 @@ if __name__ == "__main__":
 
     ret = api.check(params)
     if ret["code"] == 200:
-        print "提交结果: %s" % ret["result"]
+        if ret["result"]["status"]==0:
+            print  "推送成功!taskId=%s" % (ret["result"]["taskId"])
+        else:
+            print  "推送失败!taskId=%s" % (ret["result"]["taskId"])    
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
