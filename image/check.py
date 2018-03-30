@@ -22,7 +22,7 @@ class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
 
     API_URL = "https://as.dun.163yun.com/v3/image/check"
-    VERSION = "v3.1"
+    VERSION = "v3.2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     if ret["code"] == 200:
         results = ret["result"]
         for result in results:
-            print "taskId=%s，name=%s，labels：" %(result["taskId"],result["name"])
+            print "taskId=%s，status=%s，name=%s，labels：" %(result["taskId"],result["status"],result["name"])
             maxLevel = -1
             for labelObj in result["labels"]:
                 label = labelObj["label"]
