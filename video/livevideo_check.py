@@ -78,8 +78,8 @@ if __name__ == "__main__":
 
     params = {
         "dataId": "fbfcad1c-dba1-490c-b4de-e784c2691765",
-        "url": "http://xxx.xxx.com/xxxx",
-        "callback": "{\"p\":\"xx\"}"
+        "url": "http://xxx.xxx.com/xxxx"
+        # "callback": "{\"p\":\"xx\"}"
     }
 
     ret = api.check(params)
