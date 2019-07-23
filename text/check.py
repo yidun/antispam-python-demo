@@ -79,14 +79,14 @@ if __name__ == "__main__":
 
     params = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾测试内容！",
-		"dataType": "1",
-        "ip": "123.115.77.137",
-        "account": "python@163.com",
-        "deviceType": "4",
-        "deviceId": "92B1E5AA-4C3D-4565-A8C2-86E297055088",
-        "callback": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "publishTime": str(int(time.time() * 1000))
+        "content": "易盾测试内容！"
+		# "dataType": "1",
+        # "ip": "123.115.77.137",
+        # "account": "python@163.com",
+        # "deviceType": "4",
+        # "deviceId": "92B1E5AA-4C3D-4565-A8C2-86E297055088",
+        # "callback": "ebfcad1c-dba1-490c-b4de-e784c2691768",
+        # "publishTime": str(int(time.time() * 1000))
     }
     ret = text_api.check(params)
     if ret["code"] == 200:

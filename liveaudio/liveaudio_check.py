@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""易盾视频检测接口python示例代码
+"""易盾直播音频检测接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python2.7
 运行:
@@ -18,10 +18,10 @@ import urllib
 import urllib2
 import json
 
-class VideoAPIDemo(object):
-    """视频检测接口示例代码"""
-    API_URL = "https://as.dun.163yun.com/v3/video/submit"
-    VERSION = "v3"
+class LiveAudioAPIDemo(object):
+    """直播音频检测接口示例代码"""
+    API_URL = "https://as-liveaudio.dun.163yun.com/v1/liveaudio/check"
+    VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -74,19 +74,14 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id" # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key" # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id" # 业务ID，易盾根据产品业务特点分配
-    api = VideoAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = LiveAudioAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     params = {
-        "dataId": "fbfcad1c-dba1-490c-b4de-e784c2691765",
         "url": "http://xxx.xxx.com/xxxx"
-        # "callback": "{\"p\":\"xx\"}"
     }
 
     ret = api.check(params)
     if ret["code"] == 200:
-        if ret["result"]["status"]==0:
-            print  "推送成功!taskId=%s" % (ret["result"]["taskId"])
-        else:
-            print  "推送失败!taskId=%s" % (ret["result"]["taskId"])    
+        print "提交结果: %s" % ret["result"]
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
