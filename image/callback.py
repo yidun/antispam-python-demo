@@ -20,8 +20,8 @@ import json
 
 class ImageCheckCallbackAPIDemo(object):
     """易盾图片离线检测结果获取接口示例代码"""
-    API_URL = "https://as.dun.163yun.com/v3/image/callback/results"
-    VERSION = "v3.1"
+    API_URL = "https://as.dun.163yun.com/v4/image/callback/results"
+    VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -79,21 +79,20 @@ if __name__ == "__main__":
 
     ret = image_check_callback_api.check()
     if ret["code"] == 200:
-        results = ret["result"]
+        results = ret["antispam"]
         if len(results) == 0:
             print "暂时没有人工复审结果需要获取，请稍后重试！ "
         for result in results:
             print "taskId=%s，name=%s，labels：" %(result["taskId"],result["name"])
-            maxLevel = -1
+            action = result["action"]
             for labelObj in result["labels"]:
                 label = labelObj["label"]
                 level = labelObj["level"]
                 rate  = labelObj["rate"]
                 print "label:%s, level=%s, rate=%s" %(label, level, rate)
-                maxLevel =level if level > maxLevel else maxLevel
-            if maxLevel==0:
+            if action==0:
                 print "#图片人工复审结果：最高等级为\"正常\"\n"
-            elif maxLevel==2:
+            elif action==2:
                 print "#图片人工复审结果：最高等级为\"确定\"\n"    
             
     else:

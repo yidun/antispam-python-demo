@@ -21,8 +21,8 @@ import json
 class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v3/image/check"
-    VERSION = "v3.2"
+    API_URL = "https://as.dun.163yun.com/v4/image/check"
+    VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -82,9 +82,9 @@ if __name__ == "__main__":
 
     images = []
     imageurl = {
-        "name":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
+        "name":"https://nos.netease.com/yidun/2-0-0-a6133509763d4d6eac881a58f1791976.jpg",
         "type":1,
-        "data":"http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg"
+        "data":"https://nos.netease.com/yidun/2-0-0-a6133509763d4d6eac881a58f1791976.jpg"
     }
     imagebase64 = {
         "name":"{\"imageId\": 33451123, \"contentId\": 78978}",
@@ -101,22 +101,30 @@ if __name__ == "__main__":
     }
     ret = image_check_api.check(params)
     if ret["code"] == 200:
-        results = ret["result"]
-        for result in results:
-            print "taskId=%s，status=%s，name=%s，labels：" %(result["taskId"],result["status"],result["name"])
-            maxLevel = -1
+        antispamArray = ret["antispam"]
+        for result in antispamArray:
+            action = result["action"]
+            print "taskId=%s，status=%s，name=%s，action=%s" %(result["taskId"],result["status"],result["name"],action)
             for labelObj in result["labels"]:
                 label = labelObj["label"]
                 level = labelObj["level"]
                 rate  = labelObj["rate"]
+                """图片二级分类，根据需要解析"""
+                subLabels = labelObj["subLabels"]
                 print "label:%s, level=%s, rate=%s" %(label, level, rate)
-                maxLevel =level if level > maxLevel else maxLevel
-            if maxLevel==0:
+            if action==0:
                 print "#图片机器检测结果：最高等级为\"正常\"\n"
-            elif maxLevel==1:
+            elif action==1:
                 print "#图片机器检测结果：最高等级为\"嫌疑\"\n"
-            elif maxLevel==2:
+            elif action==2:
                 print "#图片机器检测结果：最高等级为\"确定\"\n"    
-            
+        ocrArray = ret["ocr"]
+        for result in ocrArray:
+            print "taskId=%s，name=%s" %(result["taskId"],result["name"])
+            for detailObj in result["details"]:
+                content = detailObj["content"]
+                """lineContents为ocr片段及坐标信息，根据需要解析"""
+                lineContents = detailObj["lineContents"]
+                print "识别ocr文本内容:%s" %(content)
     else:
         print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
