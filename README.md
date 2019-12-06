@@ -2,7 +2,7 @@
 http://dun.163.com
 ## 接口说明
 
-- pyhton版本:2.7
+- pyhton版本:3.7
 - 文件说明
 
 ```
