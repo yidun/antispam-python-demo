@@ -1,25 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""易盾视频检测接口python示例代码
+"""
+易盾反垃圾云服务视频点播信息提交接口python示例代码
 接口文档: http://dun.163.com/api.html
-python版本：python2.7
+python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python check.py
+    2. $ python video_submit.py
 """
 __author__ = 'yidun-dev'
-__date__ = '2016/3/10'
-__version__ = '0.1-dev'
+__date__ = '2019/11/27'
+__version__ = '0.2-dev'
 
 import hashlib
 import time
 import random
-import urllib
-import urllib2
+import urllib.request as urlrequest
+import urllib.parse as urlparse
 import json
 
-class VideoAPIDemo(object):
-    """视频检测接口示例代码"""
+
+class VideoSubmitAPIDemo(object):
+    """视频点播信息提交接口示例代码"""
+
     API_URL = "https://as.dun.163yun.com/v3/video/submit"
     VERSION = "v3"
 
@@ -43,9 +46,9 @@ class VideoAPIDemo(object):
         """
         buff = ""
         for k in sorted(params.keys()):
-            buff += str(k)+ str(params[k])
+            buff += str(k) + str(params[k])
         buff += self.secret_key
-        return hashlib.md5(buff).hexdigest()
+        return hashlib.md5(buff.encode("utf8")).hexdigest()
 
     def check(self, params):
         """请求易盾接口
@@ -58,35 +61,46 @@ class VideoAPIDemo(object):
         params["businessId"] = self.business_id
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
-        params["nonce"] = int(random.random()*100000000)
+        params["nonce"] = int(random.random() * 100000000)
         params["signature"] = self.gen_signature(params)
 
         try:
-            params = urllib.urlencode(params)
-            request = urllib2.Request(self.API_URL, params)
-            content = urllib2.urlopen(request, timeout=1).read()
+            params = urlparse.urlencode(params).encode("utf8")
+            request = urlrequest.Request(self.API_URL, params)
+            content = urlrequest.urlopen(request, timeout=1).read()
             return json.loads(content)
-        except Exception, ex:
-            print "调用API接口失败:", str(ex)
+        except Exception as ex:
+            print("调用API接口失败:", str(ex))
+
 
 if __name__ == "__main__":
     """示例代码入口"""
-    SECRET_ID = "your_secret_id" # 产品密钥ID，产品标识
-    SECRET_KEY = "your_secret_key" # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
-    BUSINESS_ID = "your_business_id" # 业务ID，易盾根据产品业务特点分配
-    api = VideoAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
+    SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
+    BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
+    api = VideoSubmitAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
+
+    # 私有请求参数
     params = {
         "dataId": "fbfcad1c-dba1-490c-b4de-e784c2691765",
         "url": "http://xxx.xxx.com/xxxx"
         # "callback": "{\"p\":\"xx\"}"
+        # "scFrequency": 5
+        # "callbackUrl": "http://***"  # 主动回调地址url,如果设置了则走主动回调逻辑
     }
 
     ret = api.check(params)
-    if ret["code"] == 200:
-        if ret["result"]["status"]==0:
-            print  "推送成功!taskId=%s" % (ret["result"]["taskId"])
+
+    code: int = ret["code"]
+    msg: str = ret["msg"]
+    if code == 200:
+        result: dict = ret["result"]
+        status: int = result["status"]
+        taskId: str = result["taskId"]
+        if status == 0:
+            print("推送成功! taskId: %s" % (ret["result"]["taskId"]))
         else:
-            print  "推送失败!taskId=%s" % (ret["result"]["taskId"])    
+            print("推送失败! taskId: %s" % (ret["result"]["taskId"]))
     else:
-        print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
+        print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

@@ -1,27 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""易盾音频结果获取接口python示例代码
+"""
+易盾易盾反垃圾云服务音频离线结果获取接口python示例代码
 接口文档: http://dun.163.com/api.html
-python版本：python2.7
+python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python callback.py
+    2. $ python audio_callback.py
 """
 __author__ = 'yidun-dev'
-__date__ = '2016/3/10'
-__version__ = '0.1-dev'
+__date__ = '2019/11/27'
+__version__ = '0.2-dev'
 
 import hashlib
 import time
 import random
-import urllib
-import urllib2
+import urllib.request as urlrequest
+import urllib.parse as urlparse
 import json
 
+
 class AudioCallbackAPIDemo(object):
-    """音频检测结果获取接口示例代码"""
-    API_URL = "https://as.dun.163yun.com/v1/audio/callback/results"
-    VERSION = "v1"
+    """音频离线结果获取接口示例代码"""
+
+    API_URL = "https://as.dun.163yun.com/v3/audio/callback/results"
+    VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -43,9 +46,9 @@ class AudioCallbackAPIDemo(object):
         """
         buff = ""
         for k in sorted(params.keys()):
-            buff += str(k)+ str(params[k])
+            buff += str(k) + str(params[k])
         buff += self.secret_key
-        return hashlib.md5(buff).hexdigest()
+        return hashlib.md5(buff.encode("utf8")).hexdigest()
 
     def check(self):
         """请求易盾接口
@@ -57,41 +60,51 @@ class AudioCallbackAPIDemo(object):
         params["businessId"] = self.business_id
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
-        params["nonce"] = int(random.random()*100000000)
+        params["nonce"] = int(random.random() * 100000000)
         params["signature"] = self.gen_signature(params)
 
         try:
-            params = urllib.urlencode(params)
-            request = urllib2.Request(self.API_URL, params)
-            content = urllib2.urlopen(request, timeout=10).read()
+            params = urlparse.urlencode(params).encode("utf8")
+            request = urlrequest.Request(self.API_URL, params)
+            content = urlrequest.urlopen(request, timeout=10).read()
             return json.loads(content)
-        except Exception, ex:
-            print "调用API接口失败:", str(ex)
+        except Exception as ex:
+            print("调用API接口失败:", str(ex))
+
 
 if __name__ == "__main__":
     """示例代码入口"""
-    SECRET_ID = "your_secret_id" # 产品密钥ID，产品标识
-    SECRET_KEY = "your_secret_key" # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
-    BUSINESS_ID = "your_business_id" # 业务ID，易盾根据产品业务特点分配
+    SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
+    SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
+    BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
     api = AudioCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
     
     ret = api.check()
 
-    if ret["code"] == 200:
-        for result in ret["result"]:
-            action = result["action"]
-            taskId = result["taskId"]
-            labelArray = result["labels"]
-            """
-            for lObject in labelArray:
-                label = lObject["label"]
-                level = lObject["level"]
-                detailsObject=lObject["details"];
-                hintArray=detailsObject["hint"];
-            """
-            if action == 0:
-                print "结果：通过: taskId=%s" % taskId
-            elif action==2:
-                print "结果：不通过: taskId=%s" % taskId
+    code: int = ret["code"]
+    msg: str = ret["msg"]
+    if code == 200:
+        resultArray: list = ret["antispam"]
+        if len(resultArray) == 0:
+            print("暂时没有结果需要获取, 请稍后重试!")
+        else:
+            for result in resultArray:
+                taskId: str = result["taskId"]
+                asrStatus: int = result["asrStatus"]
+                if asrStatus == 4:
+                    asrResult: int = result["asrResult"]
+                    print("检测失败: taskId=%s, asrResult=%s" % (taskId, asrResult))
+                else:
+                    action: int = result["action"]
+                    labelArray: list = result["labels"]
+                    if action == 0:
+                        print("taskId=%s, 结果: 通过" % taskId)
+                    elif action == 1 or action == 2:
+                        # for labelItem in labelArray:
+                        #     label: int = labelItem["label"]
+                        #     level: int = labelItem["level"]
+                        #     details: dict = labelItem["details"]
+                        #     hintArray: list = labelItem["hint"]
+                        print("taskId=%s, 结果: %s，证据信息如下: %s" % (taskId, "不确定" if action == 1 else "不通过", labelArray))
     else:
-        print "ERROR: ret.code=%s, ret.msg=%s" % (ret["code"], ret["msg"])
+        print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

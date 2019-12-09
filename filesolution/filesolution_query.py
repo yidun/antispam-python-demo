@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务视频直播离线结果获取接口python示例代码
+易盾反垃圾云服务文档解决方案结果查询接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
-    1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python livevideo_callback.py
+    1. 修改 SECRET_ID,SECRET_KEY 为对应申请到的值
+    2. $ python filesolution_query.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2019/11/27'
@@ -20,22 +20,20 @@ import urllib.parse as urlparse
 import json
 
 
-class LiveVideoCallbackAPIDemo(object):
-    """视频直播离线结果获取接口示例代码"""
+class FileSolutionQueryByTaskIdAPIDemo(object):
+    """文档解决方案结果获取接口"""
 
-    API_URL = "https://as.dun.163yun.com/v2/livevideo/callback/results"
-    VERSION = "v2.1"
+    API_URL = "https://as-file.dun.163yun.com/v1/file/query"
+    VERSION = "v1.1"
 
-    def __init__(self, secret_id, secret_key, business_id):
+    def __init__(self, secret_id, secret_key):
         """
         Args:
             secret_id (str) 产品密钥ID，产品标识
             secret_key (str) 产品私有密钥，服务端生成签名信息使用
-            business_id (str) 业务ID，易盾根据产品业务特点分配
         """
         self.secret_id = secret_id
         self.secret_key = secret_key
-        self.business_id = business_id
 
     def gen_signature(self, params=None):
         """生成签名信息
@@ -50,14 +48,12 @@ class LiveVideoCallbackAPIDemo(object):
         buff += self.secret_key
         return hashlib.md5(buff.encode("utf8")).hexdigest()
 
-    def check(self):
+    def check(self, params):
         """请求易盾接口
         Returns:
             请求结果，json格式
         """
-        params = {}
         params["secretId"] = self.secret_id
-        params["businessId"] = self.business_id
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
         params["nonce"] = int(random.random() * 100000000)
@@ -76,27 +72,30 @@ if __name__ == "__main__":
     """示例代码入口"""
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
-    BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = LiveVideoCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = FileSolutionQueryByTaskIdAPIDemo(SECRET_ID, SECRET_KEY)
 
-    ret = api.check()
+    # 私有请求参数
+    taskIds: list = ['b0a8b041517c46b7b2fff5d5110833d5', 'c3cd5cc6b5474fddb92dfe4d4f1cda34']  # 查询参数taskIds
+    params = {
+        "taskIds": taskIds
+    }
+
+    ret = api.check(params)
 
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
-        for result in resultArray:
-            taskId: str = result["taskId"]
-            callback: str = result["callback"]
-            evidence: dict = result["evidence"]
-            labelArray: list = result["labels"]
-            if (labelArray is not None) and len(labelArray) == 0:  # 检测正常
-                print("正常, taskId: %s, callback: %s, 证据信息: %s" % (taskId, callback, evidence))
-            elif len(labelArray) > 0:  # 检测异常
-                for labelItem in labelArray:
-                    label: int = labelItem["label"]
-                    level: int = labelItem["level"]
-                    rate: float = labelItem["rate"]
-                    print("异常, taskId: %s, callback: %s, 分类: %s, 证据信息: %s" % (taskId, callback, labelItem, evidence))
+        if resultArray is None:
+            print("Can't find Callback Data")
+            exit()
+        for resultItem in resultArray:
+            dataId: str = resultItem["dataId"]
+            taskId: str = resultItem["taskId"]
+            result: int = resultItem["result"]
+            callback: str = resultItem.get("callback", "")
+            evidences: dict = resultItem["evidences"]
+            print("SUCCESS: dataId=%s, taskId=%s, result=%s, callback=%s, evidences=%s" %
+                  (dataId, taskId, result, callback, evidences))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
