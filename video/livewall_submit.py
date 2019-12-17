@@ -22,8 +22,9 @@ import json
 
 class LiveWallSubmitAPIDemo(object):
     """直播电视墙提交接口示例代码"""
-    API_URL = "https://as.dun.163yun.com/v2/livevideo/submit"
-    VERSION = "v2"
+
+    API_URL = "https://as.dun.163yun.com/v3/livevideo/submit"
+    VERSION = "v3"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -93,10 +94,12 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        result: bool = ret["result"]
-        if result:
-            print("推送成功!")
+        result: dict = ret["result"]
+        status: int = result["status"]
+        taskId: str = result["taskId"]
+        if status == 0:
+            print("提交成功!, taskId: %s" % taskId)
         else:
-            print("推送失败!")
+            print("提交失败!")
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
