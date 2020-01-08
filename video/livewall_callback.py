@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务视频直播离线结果获取接口python示例代码
+易盾反垃圾云服务直播电视墙离线结果获取接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python livevideo_callback.py
+    2. $ python livewall_callback.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2019/11/27'
@@ -20,11 +20,11 @@ import urllib.parse as urlparse
 import json
 
 
-class LiveVideoCallbackAPIDemo(object):
-    """视频直播离线结果获取接口示例代码"""
+class LiveWallCallbackAPIDemo(object):
+    """直播电视墙离线结果获取接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v2/livevideo/callback/results"
-    VERSION = "v2.1"
+    API_URL = "https://as.dun.163yun.com/v2/livewall/callback/results"
+    VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -75,9 +75,9 @@ class LiveVideoCallbackAPIDemo(object):
 if __name__ == "__main__":
     """示例代码入口"""
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
-    SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
+    SECRET_KEY = "your_secret_key"  # 产品私有密list钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = LiveVideoCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = LiveWallCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     ret = api.check()
 
@@ -87,16 +87,17 @@ if __name__ == "__main__":
         resultArray: list = ret["result"]
         for result in resultArray:
             taskId: str = result["taskId"]
+            status: int = result["status"]
             callback: str = result["callback"]
+            action: int = result["action"]
+            actionTime: int = result["actionTime"]
+            label: int = result["label"]
+            detail: str = result["detail"]
+            warnCount: int = result["warnCount"]
             evidence: dict = result["evidence"]
-            labelArray: list = result["labels"]
-            if (labelArray is not None) and len(labelArray) == 0:  # 检测正常
-                print("正常, taskId: %s, callback: %s, 证据信息: %s" % (taskId, callback, evidence))
-            elif len(labelArray) > 0:  # 检测异常
-                for labelItem in labelArray:
-                    label: int = labelItem["label"]
-                    level: int = labelItem["level"]
-                    rate: float = labelItem["rate"]
-                    print("异常, taskId: %s, callback: %s, 分类: %s, 证据信息: %s" % (taskId, callback, labelItem, evidence))
+            if action == 2:  # 警告
+                print("警告, taskId: %s, callback: %s, 总警告次数: %s, 证据信息: %s" % (taskId, callback, warnCount, evidence))
+            elif action == 3:  # 断流
+                print("断流, taskId: %s, callback: %s, 总警告次数: %s, 证据信息: %s" % (taskId, callback, warnCount, evidence))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

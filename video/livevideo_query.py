@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务视频直播离线结果获取接口python示例代码
+易盾反垃圾云服务视频直播结果查询接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python livevideo_callback.py
+    2. $ python livevideo_query.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2019/11/27'
@@ -20,11 +20,11 @@ import urllib.parse as urlparse
 import json
 
 
-class LiveVideoCallbackAPIDemo(object):
-    """视频直播离线结果获取接口示例代码"""
+class LiveVideoQueryByTaskIdsDemo(object):
+    """视频直播结果查询接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v2/livevideo/callback/results"
-    VERSION = "v2.1"
+    API_URL = "https://as.dun.163yun.com/v1/livevideo/query/task"
+    VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -50,12 +50,13 @@ class LiveVideoCallbackAPIDemo(object):
         buff += self.secret_key
         return hashlib.md5(buff.encode("utf8")).hexdigest()
 
-    def check(self):
+    def query(self,params):
         """请求易盾接口
+        Args:
+            params (object) 请求参数
         Returns:
             请求结果，json格式
         """
-        params = {}
         params["secretId"] = self.secret_id
         params["businessId"] = self.business_id
         params["version"] = self.VERSION
@@ -64,7 +65,7 @@ class LiveVideoCallbackAPIDemo(object):
         params["signature"] = self.gen_signature(params)
 
         try:
-            params = urlparse.urlencode(params).encode("utf8")
+            params = urlparse.urlencode(params).encode()
             request = urlrequest.Request(self.API_URL, params)
             content = urlrequest.urlopen(request, timeout=10).read()
             return json.loads(content)
@@ -77,26 +78,28 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = LiveVideoCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = LiveVideoQueryByTaskIdsDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
-    ret = api.check()
+    # 私有请求参数
+    taskIds: list = ['c679d93d4a8d411cbe3454214d4b1fd7', '49800dc7877f4b2a9d2e1dec92b988b6']  # 查询参数taskIds
+    params = {
+        "taskIds": taskIds
+    }
+
+    ret = api.query(params)
 
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
         for result in resultArray:
+            # 直播视频uuid
             taskId: str = result["taskId"]
+            # 直播状态, 101: 直播中，102：直播结束
+            status: int = result["status"]
+            # 回调标识
             callback: str = result["callback"]
-            evidence: dict = result["evidence"]
-            labelArray: list = result["labels"]
-            if (labelArray is not None) and len(labelArray) == 0:  # 检测正常
-                print("正常, taskId: %s, callback: %s, 证据信息: %s" % (taskId, callback, evidence))
-            elif len(labelArray) > 0:  # 检测异常
-                for labelItem in labelArray:
-                    label: int = labelItem["label"]
-                    level: int = labelItem["level"]
-                    rate: float = labelItem["rate"]
-                    print("异常, taskId: %s, callback: %s, 分类: %s, 证据信息: %s" % (taskId, callback, labelItem, evidence))
+            callbackStatus: int = result["callbackStatus"]
+            expireStatus: int = result["expireStatus"]
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
