@@ -23,7 +23,7 @@ import json
 class LiveVideoCallbackAPIDemo(object):
     """视频直播离线结果获取接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v2/livevideo/callback/results"
+    API_URL = "http://as.dun.163yun.com/v2/livevideo/callback/results"
     VERSION = "v2.1"
 
     def __init__(self, secret_id, secret_key, business_id):

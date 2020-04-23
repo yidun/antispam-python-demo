@@ -23,7 +23,7 @@ import json
 class TextCallbackAPIDemo(object):
     """文本离线检测结果获取接口示例代码"""
     
-    API_URL = "https://as.dun.163yun.com/v3/text/callback/results"
+    API_URL = "http://as.dun.163yun.com/v3/text/callback/results"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):

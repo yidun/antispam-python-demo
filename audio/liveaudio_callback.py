@@ -23,7 +23,7 @@ import json
 class LiveAudioCallbackAPIDemo(object):
     """直播音频检测结果获取接口示例代码"""
 
-    API_URL = "https://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results"
+    API_URL = "http://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -84,7 +84,7 @@ class LiveAudioCallbackAPIDemo(object):
             action: int = evidences["action"]
             segment_array: list = evidences["segments"]
             if action == 0:
-                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, segment_array, start_time, end_time))
+                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, start_time, end_time, segment_array))
             elif action == 1 or action == 2:
                 # for segment_item in segment_array:
                 #     label: int = segment_item["label"]

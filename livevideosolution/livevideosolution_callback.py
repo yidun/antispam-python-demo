@@ -23,7 +23,7 @@ import json
 class LiveVideoSolutionCallbackAPIDemo(object):
     """直播音视频解决方案离线结果获取接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v1/livewallsolution/callback/results"
+    API_URL = "http://as.dun.163yun.com/v1/livewallsolution/callback/results"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key):
@@ -81,7 +81,7 @@ class LiveVideoSolutionCallbackAPIDemo(object):
             action: int = audio_evidences["action"]
             segment_array: list = audio_evidences["segments"]
             if action == 0:
-                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, segment_array, start_time, end_time))
+                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, start_time, end_time, segment_array))
             elif action == 1 or action == 2:
                 # for segment_item in segment_array:
                 #     label: int = segment_item["label"]
@@ -154,15 +154,14 @@ if __name__ == "__main__":
                 evidences: dict = result["evidences"]
                 reviewEvidences: dict = result["reviewEvidences"]
                 if evidences is not None:
-                    evidence: dict = evidences["evidebces"]
-                    audio: dict = evidence["audio"]
-                    video: dict = evidence["video"]
+                    audio: dict = evidences["audio"]
+                    video: dict = evidences["video"]
                     if audio is not None:
                         api.parse_audio(audio, taskId)
                     elif video is not None:
                         api.parse_video(video, taskId)
                     else:
-                        print("Invalid Evidence: %s", evidence)
+                        print("Invalid Evidence: %s", evidences)
                 elif reviewEvidences is not None:
                     api.parse_human(reviewEvidences, taskId)
                 else:

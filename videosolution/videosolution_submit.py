@@ -23,7 +23,7 @@ import json
 class VideoSolutionSubmitAPIDemo(object):
     """点播音视频解决方案检测提交接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v1/videosolution/submit"
+    API_URL = "http://as.dun.163yun.com/v1/videosolution/submit"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key):

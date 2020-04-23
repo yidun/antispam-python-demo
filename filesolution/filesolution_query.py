@@ -23,7 +23,7 @@ import json
 class FileSolutionQueryByTaskIdAPIDemo(object):
     """文档解决方案结果获取接口"""
 
-    API_URL = "https://as-file.dun.163yun.com/v1/file/query"
+    API_URL = "http://as-file.dun.163yun.com/v1/file/query"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key):

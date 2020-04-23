@@ -23,7 +23,7 @@ import json
 class LiveWallCallbackAPIDemo(object):
     """直播电视墙离线结果获取接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v2/livewall/callback/results"
+    API_URL = "http://as.dun.163yun.com/v2/livewall/callback/results"
     VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -124,20 +124,21 @@ if __name__ == "__main__":
         resultArray: list = ret["result"]
         if resultArray is None or len(resultArray) == 0:
             print("暂时没有结果需要获取，请稍后重试!")
-        for result in resultArray:
-            taskId: str = result["taskId"]
-            dataId: str = result["dataId"]
-            callback: str = result["callback"]
-            status: int = result["status"]
-            print("taskId:%s, dataId:%s, callback:%s, status:%s" % (taskId, dataId, callback, status))
+        else:
+            for result in resultArray:
+                taskId: str = result["taskId"]
+                dataId: str = result["dataId"]
+                callback: str = result["callback"]
+                status: int = result["status"]
+                print("taskId:%s, dataId:%s, callback:%s, status:%s" % (taskId, dataId, callback, status))
 
-            evidences: dict = result["evidences"]
-            reviewEvidences: dict = result["reviewEvidences"]
-            if evidences is not None:
-                api.parse_machine(evidences, taskId)
-            elif reviewEvidences is not None:
-                api.parse_human(reviewEvidences, taskId)
-            else:
-                print("Invalid Result: %s" % result)
+                evidences: dict = result["evidences"]
+                reviewEvidences: dict = result["reviewEvidences"]
+                if evidences is not None:
+                    api.parse_machine(evidences, taskId)
+                elif reviewEvidences is not None:
+                    api.parse_human(reviewEvidences, taskId)
+                else:
+                    print("Invalid Result: %s" % result)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

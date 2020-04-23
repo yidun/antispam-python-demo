@@ -23,7 +23,7 @@ import json
 class ImageSubmitAPIDemo(object):
     """图片批量提交接口"""
 
-    API_URL = "https://as.dun.163yun.com/v1/image/submit"
+    API_URL = "http://as.dun.163yun.com/v1/image/submit"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
