@@ -106,9 +106,10 @@ if __name__ == "__main__":
         #     label: int = labelItem["label"]
         #     level: int = labelItem["level"]
         #     details: dict = labelItem["details"]
-        #     hintArray: list = labelItem["hint"]
+        #     hintArray: list = details["hint"]
+        #     subLabels: list = labelItem["subLabels"]
         if action == 0:
-            print("taskId: %s, 文本机器检测结果: 通过" % (taskId))
+            print("taskId: %s, 文本机器检测结果: 通过" % taskId)
         elif action == 1:
             print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
         elif action == 2:

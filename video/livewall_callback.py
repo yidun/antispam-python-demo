@@ -71,6 +71,43 @@ class LiveWallCallbackAPIDemo(object):
         except Exception as ex:
             print("调用API接口失败:", str(ex))
 
+    def parse_machine(self, evidences, taskId):
+        """机审信息"""
+        print("=== 机审信息 ===")
+        evidence: dict = evidences["evidence"]
+        labels: list = evidences["labels"]
+        types: int = evidence["type"]
+        url: str = evidence["url"]
+        begin_time: int = evidence["beginTime"]
+        end_time: int = evidence["endTime"]
+
+        for label_item in labels:
+            label: int = label_item["label"]
+            level: int = label_item["level"]
+            rate: float = label_item["rate"]
+            subLabels: list = label_item["subLabels"]
+        print("Machine Evidence: %s" % evidence)
+        print("Machine Labels: %s" % labels)
+        print("================")
+
+    def parse_human(self, review_evidences, taskId):
+        """人审信息"""
+        print("=== 人审信息 ===")
+        action: int = review_evidences["action"]
+        action_time: int = review_evidences["actionTime"]
+        label: int = review_evidences["label"]
+        detail: str = review_evidences["detail"]
+        warn_count: int = review_evidences["warnCount"]
+        evidence: list = review_evidences["evidence"]
+
+        if action == 2:
+            print("警告, taskId:%s, 警告次数:%s, 证据信息:%s" % (taskId, warn_count, evidence))
+        elif action == 3:
+            print("断流, taskId:%s, 警告次数:%s, 证据信息:%s" % (taskId, warn_count, evidence))
+        else:
+            print("人审信息：%s" % review_evidences)
+        print("================")
+
 
 if __name__ == "__main__":
     """示例代码入口"""
@@ -85,19 +122,22 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
+        if resultArray is None or len(resultArray) == 0:
+            print("暂时没有结果需要获取，请稍后重试!")
         for result in resultArray:
             taskId: str = result["taskId"]
-            status: int = result["status"]
+            dataId: str = result["dataId"]
             callback: str = result["callback"]
-            action: int = result["action"]
-            actionTime: int = result["actionTime"]
-            label: int = result["label"]
-            detail: str = result["detail"]
-            warnCount: int = result["warnCount"]
-            evidence: dict = result["evidence"]
-            if action == 2:  # 警告
-                print("警告, taskId: %s, callback: %s, 总警告次数: %s, 证据信息: %s" % (taskId, callback, warnCount, evidence))
-            elif action == 3:  # 断流
-                print("断流, taskId: %s, callback: %s, 总警告次数: %s, 证据信息: %s" % (taskId, callback, warnCount, evidence))
+            status: int = result["status"]
+            print("taskId:%s, dataId:%s, callback:%s, status:%s" % (taskId, dataId, callback, status))
+
+            evidences: dict = result["evidences"]
+            reviewEvidences: dict = result["reviewEvidences"]
+            if evidences is not None:
+                api.parse_machine(evidences, taskId)
+            elif reviewEvidences is not None:
+                api.parse_human(reviewEvidences, taskId)
+            else:
+                print("Invalid Result: %s" % result)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

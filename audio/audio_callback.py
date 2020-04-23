@@ -85,7 +85,7 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["antispam"]
-        if len(resultArray) == 0:
+        if resultArray is None or len(resultArray) == 0:
             print("暂时没有结果需要获取, 请稍后重试!")
         else:
             for result in resultArray:
@@ -104,7 +104,8 @@ if __name__ == "__main__":
                         #     label: int = labelItem["label"]
                         #     level: int = labelItem["level"]
                         #     details: dict = labelItem["details"]
-                        #     hintArray: list = labelItem["hint"]
+                        #     hintArray: list = details["hint"]
+                        #     subLabels: list = labelItem["subLabels"]
                         print("taskId=%s, 结果: %s，证据信息如下: %s" % (taskId, "不确定" if action == 1 else "不通过", labelArray))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

@@ -91,17 +91,62 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        resultArray: list = ret["result"]
-        if len(resultArray) == 0:
-            print("暂无回调数据")
+        antispamArray: list = ret["antispam"]
+        if antispamArray is None or len(antispamArray) == 0:
+            print("暂无审核回调数据")
         else:
-            for result in resultArray:
-                action: int = result["action"]
+            for result in antispamArray:
+                status: int = result["status"]
                 taskId: str = result["taskId"]
-                labelArray: list = result["labels"]
-                if action == 0:
-                    print("callback=%s, 结果: 通过" % taskId)
-                elif action == 2:
-                    print("callback=%s, 结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
+                if status == 30:
+                    print("antispam callback taskId=%s，结果：数据不存在" % taskId)
+                else:
+                    action: int = result["action"]
+                    labelArray: list = result["labels"]
+                    if action == 0:
+                        print("callback taskId=%s，结果：通过" % taskId)
+                    elif action == 2:
+                        for labelInfo in labelArray:
+                            label: int = labelInfo["label"]
+                            level: int = labelInfo["level"]
+                            details: dict = labelInfo["details"]
+                            hintArray: list = details["hint"]
+                            subLabels: list = labelInfo["subLabels"]
+                        print("callback=%s，结果：不通过，分类信息如下：%s" % (taskId, labelArray))
+        languageArray: list = ret["language"]
+        if languageArray is None or len(languageArray) == 0:
+            print("暂无语种检测数据")
+        else:
+            for result in languageArray:
+                status: int = result["status"]
+                taskId: str = result["taskId"]
+                if status == 30:
+                    print("language callback taskId=%s，结果：数据不存在" % taskId)
+                else:
+                    detailsArray: list = result["details"]
+                    if detailsArray is not None and len(detailsArray) > 0:
+                        for language in detailsArray:
+                            typeLan: str = language["type"]
+                            segmentsArray: list = language["segments"]
+                            if segmentsArray is not None and len(segmentsArray) > 0:
+                                for segment in segmentsArray:
+                                    print("taskId=%s，语种类型=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, typeLan, segment["startTime"], segment["endTime"]))
+        asrArray: list = ret["asr"]
+        if asrArray is None or len(asrArray) == 0:
+            print("暂无语音翻译数据")
+        else:
+            for result in asrArray:
+                status: int = result["status"]
+                taskId: str = result["taskId"]
+                if status == 30:
+                    print("asr callback taskId=%s，结果：数据不存在" % taskId)
+                else:
+                    detailsArray: list = result["details"]
+                    if detailsArray is not None and len(detailsArray) > 0:
+                        for asr in detailsArray:
+                            startTime: int = asr["startTime"]
+                            endTime: int = asr["endTime"]
+                            content: str = asr["content"]
+                            print("taskId=%s，文字翻译结果=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, content, startTime, endTime))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
