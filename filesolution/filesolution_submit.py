@@ -23,7 +23,7 @@ import json
 class FileSolutionSubmitAPIDemo(object):
     """文档解决方案检测提交接口示例代码"""
 
-    API_URL = "https://as-file.dun.163yun.com/v1/file/submit"
+    API_URL = "http://as-file.dun.163yun.com/v1/file/submit"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key):

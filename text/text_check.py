@@ -23,7 +23,7 @@ import json
 class TextCheckAPIDemo(object):
     """文本在线检测接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v3/text/check"
+    API_URL = "http://as.dun.163yun.com/v3/text/check"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -106,9 +106,10 @@ if __name__ == "__main__":
         #     label: int = labelItem["label"]
         #     level: int = labelItem["level"]
         #     details: dict = labelItem["details"]
-        #     hintArray: list = labelItem["hint"]
+        #     hintArray: list = details["hint"]
+        #     subLabels: list = labelItem["subLabels"]
         if action == 0:
-            print("taskId: %s, 文本机器检测结果: 通过" % (taskId))
+            print("taskId: %s, 文本机器检测结果: 通过" % taskId)
         elif action == 1:
             print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
         elif action == 2:

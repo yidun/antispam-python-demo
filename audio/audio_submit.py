@@ -23,7 +23,7 @@ import json
 class AudioSubmitAPIDemo(object):
     """音频信息提交接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v3/audio/submit"
+    API_URL = "http://as.dun.163yun.com/v3/audio/submit"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):

@@ -23,7 +23,7 @@ import json
 class LiveVideoSolutionCallbackAPIDemo(object):
     """直播音视频解决方案离线结果获取接口示例代码"""
 
-    API_URL = "https://as.dun.163yun.com/v1/livewallsolution/callback/results"
+    API_URL = "http://as.dun.163yun.com/v1/livewallsolution/callback/results"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key):
@@ -68,6 +68,66 @@ class LiveVideoSolutionCallbackAPIDemo(object):
         except Exception as ex:
             print("调用API接口失败:", str(ex))
 
+    def parse_audio(self, audio_evidences, taskId):
+        """音频机审信息"""
+        print("=== 音频机审信息 ===")
+        asr_status: int = audio_evidences["asrStatus"]
+        start_time: int = audio_evidences["startTime"]
+        end_time: int = audio_evidences["endTime"]
+        if asr_status == 4:
+            asr_result: int = audio_evidences["asrResult"]
+            print("检测失败: taskId=%s, asrResult=%s" % (taskId, asr_result))
+        else:
+            action: int = audio_evidences["action"]
+            segment_array: list = audio_evidences["segments"]
+            if action == 0:
+                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, start_time, end_time, segment_array))
+            elif action == 1 or action == 2:
+                # for segment_item in segment_array:
+                #     label: int = segment_item["label"]
+                #     level: int = segment_item["level"]
+                #     evidence: str = segment_item["evidence"]
+                print("taskId=%s，结果：%s，时间区间【%s-%s】，证据信息如下：%s" % (taskId, "不确定" if action == 1 else "不通过", start_time, end_time, segment_array))
+        print("================")
+
+    def parse_video(self, video_evidences, taskId):
+        """视频机审信息"""
+        print("=== 视频机审信息 ===")
+        evidence: dict = video_evidences["evidence"]
+        labels: list = video_evidences["labels"]
+
+        types: int = evidence["type"]
+        url: str = evidence["url"]
+        begin_time: int = evidence["beginTime"]
+        end_time: int = evidence["endTime"]
+
+        for label_item in labels:
+            label: int = label_item["label"]
+            level: int = label_item["level"]
+            rate: float = label_item["rate"]
+            subLabels: list = label_item["subLabels"]
+        print("Machine Evidence: %s" % evidence)
+        print("Machine Labels: %s" % labels)
+        print("================")
+
+    def parse_human(self, human_evidences, taskId):
+        """人审信息"""
+        print("=== 人审信息 ===")
+        action: int = human_evidences["action"]
+        action_time: int = human_evidences["actionTime"]
+        label: int = human_evidences["label"]
+        detail: str = human_evidences["detail"]
+        warn_count: int = human_evidences["warnCount"]
+        evidence: list = human_evidences["evidence"]
+
+        if action == 2:
+            print("警告, taskId:%s, 警告次数:%s, 违规详情:%s, 证据信息:%s" % (taskId, warn_count, detail, evidence))
+        elif action == 3:
+            print("断流, taskId:%s, 警告次数:%s, 违规详情:%s, 证据信息:%s" % (taskId, warn_count, detail, evidence))
+        else:
+            print("人审信息：%s" % human_evidences)
+        print("================")
+
 
 if __name__ == "__main__":
     """示例代码入口"""
@@ -81,13 +141,30 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
-        if len(resultArray) == 0:
+        if resultArray is None or len(resultArray) == 0:
             print("暂时没有结果需要获取, 请稍后重试!")
         else:
             for result in resultArray:
                 taskId: str = result["taskId"]
-                action: int = result["action"]
-                label: int = result["label"]
-                print("taskId: %s, action: %s, label: %s" % (taskId, action, label))
+                callback: str = result["callback"]
+                dataId: str = result["dataId"]
+                status: int = result["status"]
+                print("taskId:%s, callback:%s, dataId:%s, status:%s" % (taskId, callback, dataId, status))
+
+                evidences: dict = result["evidences"]
+                reviewEvidences: dict = result["reviewEvidences"]
+                if evidences is not None:
+                    audio: dict = evidences["audio"]
+                    video: dict = evidences["video"]
+                    if audio is not None:
+                        api.parse_audio(audio, taskId)
+                    elif video is not None:
+                        api.parse_video(video, taskId)
+                    else:
+                        print("Invalid Evidence: %s", evidences)
+                elif reviewEvidences is not None:
+                    api.parse_human(reviewEvidences, taskId)
+                else:
+                    print("Invalid Result: %s" % result)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

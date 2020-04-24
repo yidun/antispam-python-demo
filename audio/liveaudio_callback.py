@@ -23,7 +23,7 @@ import json
 class LiveAudioCallbackAPIDemo(object):
     """直播音频检测结果获取接口示例代码"""
 
-    API_URL = "https://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results"
+    API_URL = "http://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -71,6 +71,56 @@ class LiveAudioCallbackAPIDemo(object):
         except Exception as ex:
             print("调用API接口失败:", str(ex))
 
+    def parse_machine(self, evidences, taskId):
+        """机审信息"""
+        print("=== 机审信息 ===")
+        asr_status: int = evidences["asrStatus"]
+        start_time: int = evidences["startTime"]
+        end_time: int = evidences["endTime"]
+        if asr_status == 4:
+            asr_result: int = evidences["asrResult"]
+            print("检测失败: taskId=%s, asrResult=%s" % (taskId, asr_result))
+        else:
+            action: int = evidences["action"]
+            segment_array: list = evidences["segments"]
+            if action == 0:
+                print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, start_time, end_time, segment_array))
+            elif action == 1 or action == 2:
+                # for segment_item in segment_array:
+                #     label: int = segment_item["label"]
+                #     level: int = segment_item["level"]
+                #     evidence: str = segment_item["evidence"]
+                print("taskId=%s，结果：%s，时间区间【%s-%s】，证据信息如下：%s" % (taskId, "不确定" if action == 1 else "不通过", start_time, end_time, segment_array))
+        print("================")
+
+    def parse_human(self, review_evidences, taskId):
+        """人审信息"""
+        print("=== 人审信息 ===")
+        action: int = review_evidences["action"]
+        action_time: int = review_evidences["actionTime"]
+        spam_type: int = review_evidences["spamType"]
+        spam_detail: str = review_evidences["spamDetail"]
+        warn_count: int = review_evidences["warnCount"]
+        promp_count: int = review_evidences["prompCount"]
+        segments: list = review_evidences["segments"]
+        status: int = review_evidences["status"]
+        status_str: str = "未知"
+
+        if status == 2:
+            status_str = "检测中"
+        elif status == 3:
+            status_str = "检测完成"
+
+        if action == 2:
+            print("警告, taskId:%s, 检测状态:%s, 警告次数:%s, 违规详情:%s, 证据信息:%s" % (taskId, status_str, warn_count, spam_detail, segments))
+        elif action == 3:
+            print("断流, taskId:%s, 检测状态:%s, 警告次数:%s, 违规详情:%s, 证据信息:%s" % (taskId, status_str, warn_count, spam_detail, segments))
+        elif action == 4:
+            print("提示, taskId:%s, 检测状态:%s, 提示次数:%s, 违规详情:%s, 证据信息:%s" % (taskId, status_str, promp_count, spam_detail, segments))
+        else:
+            print("人审信息：%s" % review_evidences)
+        print("================")
+
 
 if __name__ == "__main__":
     """示例代码入口"""
@@ -85,26 +135,20 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
-        if len(resultArray) == 0:
+        if resultArray is None or len(resultArray) == 0:
             print("暂时没有结果需要获取, 请稍后重试!")
         else:
             for result in resultArray:
                 taskId: str = result["taskId"]
-                asrStatus: int = result["asrStatus"]
-                if asrStatus == 4:
-                    asrResult: int = result["asrResult"]
-                    print("检测失败: taskId=%s, asrResult=%s" % (taskId, asrResult))
-                else:
-                    action: int = result["action"]
-                    segmentArray: list = result["segments"]
-                    startTime: int = result["startTime"]
-                    endTime: int = result["endTime"]
-                    if action == 0:
-                        print("taskId=%s, 结果: 通过, 证据信息如下: %s, startTime:%s, endTime:%s" % (taskId, segmentArray, startTime, endTime))
-                    elif action == 1 or action == 2:
-                        # for segmentItem in segmentArray:
-                        #     label: int = segmentItem["label"]
-                        #     level: int = segmentItem["level"]
-                        print("taskId=%s, 结果: %s，证据信息如下: %s, startTime:%s, endTime:%s" % (taskId, "不确定" if action == 1 else "不通过", segmentArray, startTime, endTime))
+                callback: str = result["callback"]
+                dataId: str = result["dataId"]
+                print("taskId:%s, callback:%s, dataId:%s" % (taskId, callback, dataId))
+
+                evidences: dict = result["evidences"]
+                review_evidences: dict = result["reviewEvidences"]
+                if evidences is not None:
+                    api.parse_machine(evidences, taskId)
+                elif review_evidences is not None:
+                    api.parse_human(review_evidences, taskId)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

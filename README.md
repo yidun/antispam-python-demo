@@ -12,6 +12,9 @@ http://dun.163.com
 │   │── audio_submit.py 点播语音在线检测提交接口演示
 │   │── liveaudio_callback.py 直播语音检测结果获取接口演示
 │   └──  liveaudio_check.py 直播语音在线检测提交接口演示
+├── crawler 网站解决方案接口演示
+│   │── crawler_callback.py 网站解决方案检测结果获取接口演示
+│   └── crawler_submit.py 网站解决方案在线检测提交接口演示
 ├── filesolution 文档解决方案接口演示
 │   │── filesolution_callback.py 文档解决方案检测结果获取接口演示
 │   │── filesolution_query.py 文档解决方案结果查询接口演示
