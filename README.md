@@ -35,6 +35,7 @@ http://dun.163.com
 ├── video 视频接口演示
 │   ├── livevideo_callback.py 直播流检测结果获取接口演示
 │   ├── livevideo_query.py 直播视频结果查询接口演示
+│   ├── livedata_query.py 直播视频截图结果查询接口演示
 │   ├── livevideo_submit.py 直播流信息提交接口演示
 │   ├── livewall_callback.py 直播电视墙检测结果获取接口演示
 │   ├── livewall_submit.py 直播电视墙信息提交接口演示
