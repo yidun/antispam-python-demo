@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务敏感词提交接口python示例代码
+易盾反垃圾云服务敏感词删除接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python keyword_submit.py
+    2. $ python keyword_delete.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2020/01/02'
@@ -20,10 +20,10 @@ import urllib.parse as urlparse
 import json
 
 
-class KeywordSubmitAPIDemo(object):
-    """敏感词提交接口示例代码"""
+class KeywordDeleteAPIDemo(object):
+    """敏感词删除接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/keyword/submit"
+    API_URL = "http://as.dun.163yun.com/v1/keyword/delete"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -78,13 +78,12 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = KeywordSubmitAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = KeywordDeleteAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     # 私有请求参数
-    keywords: list = ["色情敏感词1", "色情敏感词2"]
+    ids: list = ["425707", "425708", "425709"]
     params = {
-        "category": "100",  # 100: 色情，110: 性感，200: 广告，210: 二维码，300: 暴恐，400: 违禁，500: 涉政，600: 谩骂，700: 灌水
-        "keywords": ",".join(keywords)
+        "ids": ",".join(ids)
     }
 
     ret = api.check(params)
@@ -92,7 +91,7 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        ids: list = ret["result"]
-        print("敏感词提交结果: %s" % ids)
+        result: bool = ret["result"]
+        print("敏感词删除结果: %s" % result)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
