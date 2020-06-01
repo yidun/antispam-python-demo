@@ -92,7 +92,11 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        ids: list = ret["result"]
-        print("敏感词提交结果: %s" % ids)
+        resultArray: list = ret["result"]
+        for result in resultArray:
+            keyword: str = result["keyword"]
+            keyword_id: int = result["id"]
+            print("敏感词提交成功，keyword: %s，id: %s" % (keyword, keyword_id))
+
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
