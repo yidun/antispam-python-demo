@@ -23,7 +23,7 @@ import json
 class TextCheckAPIDemo(object):
     """文本在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v3/text/check"
+    API_URL = "http://as.dun.163.com/v3/text/check"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):

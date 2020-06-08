@@ -23,7 +23,7 @@ import json
 class LiveVideoSolutionCallbackAPIDemo(object):
     """直播音视频解决方案离线结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/livewallsolution/callback/results"
+    API_URL = "http://as.dun.163.com/v1/livewallsolution/callback/results"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key):

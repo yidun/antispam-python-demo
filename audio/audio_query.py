@@ -23,7 +23,7 @@ import json
 class AudioQueryByTaskIdsDemo(object):
     """易盾图片离线查询结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/audio/query/task"
+    API_URL = "http://as.dun.163.com/v1/audio/query/task"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):

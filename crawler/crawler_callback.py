@@ -23,7 +23,7 @@ import json
 class CrawlerCallbackAPIDemo(object):
     """点播音视频解决方案检测结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/crawler/callback/results"
+    API_URL = "http://as.dun.163.com/v1/crawler/callback/results"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key):
