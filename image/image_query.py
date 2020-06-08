@@ -23,7 +23,7 @@ import json
 class ImageQueryByTaskIdsDemo(object):
     """易盾图片离线查询结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/image/query/task"
+    API_URL = "http://as.dun.163.com/v1/image/query/task"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):

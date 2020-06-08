@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务图片批量提交接口python示例代码
+易盾反垃圾云服务敏感词查询接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python image_submit.py
+    2. $ python keyword_query.py
 """
 __author__ = 'yidun-dev'
-__date__ = '2019/11/27'
+__date__ = '2020/01/02'
 __version__ = '0.2-dev'
 
 import hashlib
@@ -20,10 +20,10 @@ import urllib.parse as urlparse
 import json
 
 
-class ImageSubmitAPIDemo(object):
-    """图片批量提交接口"""
+class KeywordSubmitAPIDemo(object):
+    """敏感词查询接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/image/submit"
+    API_URL = "http://as.dun.163.com/v1/keyword/query"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -67,7 +67,7 @@ class ImageSubmitAPIDemo(object):
         try:
             params = urlparse.urlencode(params).encode("utf8")
             request = urlrequest.Request(self.API_URL, params)
-            content = urlrequest.urlopen(request, timeout=10).read()
+            content = urlrequest.urlopen(request, timeout=1).read()
             return json.loads(content)
         except Exception as ex:
             print("调用API接口失败:", str(ex))
@@ -78,33 +78,16 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = ImageSubmitAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = KeywordSubmitAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     # 私有请求参数
-    images: list = []
-    # dataId结构产品自行设计，用于唯一定位该图片数据
-    image1 = {
-        "name": "image1",
-        "data": "https://nos.netease.com/yidun/2-0-0-a6133509763d4d6eac881a58f1791976.jpg",
-        "level": "2"
-        # "ip": "123.115.77.137"
-        # "account": "python@163.com"
-        # "deviceId": "deviceId"
-        # "callbackUrl": "http://***"  # 主动回调地址url,如果设置了则走主动回调逻辑
-    }
-    image2 = {
-        "name": "image2",
-        "data": "http://dun.163.com/public/res/web/case/sexy_normal_2.jpg?dda0e793c500818028fc14f20f6b492a",
-        "level": "0"
-        # "ip": "123.115.77.137"
-        # "account": "python@163.com"
-        # "deviceId": "deviceId"
-        # "callbackUrl": "http://***"  # 主动回调地址url,如果设置了则走主动回调逻辑
-    }
-    images.append(image1)
-    images.append(image2)
     params = {
-        "images": json.dumps(images)
+        "id": "163",
+        "category": "100",  # 100: 色情，110: 性感，200: 广告，210: 二维码，300: 暴恐，400: 违禁，500: 涉政，600: 谩骂，700: 灌水
+        "keyword": "色情敏感词",
+        "orderType": "1",
+        "pageNum": "1",
+        "pageSize": "20"
     }
 
     ret = api.check(params)
@@ -112,11 +95,17 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        resultArray: list = ret["result"]
-        for result in resultArray:
-            name: str = result["name"]
-            taskId: str = result["taskId"]
-            print("图片提交返回, name: %s, taskId: %s" % (name, taskId))
+        result: object = ret["result"]
+        words: object = result["words"]
+        count: int = words["count"]
+        rows: list = words["rows"]
+        for row in rows:
+            keyword_id: int = row["id"]
+            word: str = row["word"]
+            category: int = row["category"]
+            status: int = row["status"]
+            updateTime: int = row["updateTime"]
+            print("敏感词查询成功，id: %s，keyword: %s，category: %s，status: %s，updateTime: %s" % (keyword_id, word, category, status, updateTime))
 
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

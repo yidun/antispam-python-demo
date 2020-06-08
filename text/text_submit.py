@@ -23,7 +23,7 @@ import json
 class TextSubmitAPIDemo(object):
     """文本在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/text/submit"
+    API_URL = "http://as.dun.163.com/v1/text/submit"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):

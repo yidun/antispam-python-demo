@@ -23,7 +23,7 @@ import json
 class LiveDataQueryByTaskIdDemo(object):
     """视频直播截图结果查询接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/livevideo/query/image"
+    API_URL = "http://as.dun.163.com/v1/livevideo/query/image"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key, business_id):

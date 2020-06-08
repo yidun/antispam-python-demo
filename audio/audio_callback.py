@@ -23,7 +23,7 @@ import json
 class AudioCallbackAPIDemo(object):
     """音频离线结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v3/audio/callback/results"
+    API_URL = "http://as.dun.163.com/v3/audio/callback/results"
     VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):

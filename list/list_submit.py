@@ -23,7 +23,7 @@ import json
 class KeywordSubmitAPIDemo(object):
     """名单提交接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/list/submit"
+    API_URL = "http://as.dun.163.com/v1/list/submit"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key):

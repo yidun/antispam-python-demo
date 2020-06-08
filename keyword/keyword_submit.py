@@ -23,7 +23,7 @@ import json
 class KeywordSubmitAPIDemo(object):
     """敏感词提交接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v1/keyword/submit"
+    API_URL = "http://as.dun.163.com/v1/keyword/submit"
     VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
@@ -92,7 +92,11 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        ids: list = ret["result"]
-        print("敏感词提交结果: %s" % ids)
+        resultArray: list = ret["result"]
+        for result in resultArray:
+            keyword: str = result["keyword"]
+            keyword_id: int = result["id"]
+            print("敏感词提交成功，keyword: %s，id: %s" % (keyword, keyword_id))
+
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

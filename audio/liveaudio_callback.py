@@ -23,7 +23,7 @@ import json
 class LiveAudioCallbackAPIDemo(object):
     """直播音频检测结果获取接口示例代码"""
 
-    API_URL = "http://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results"
+    API_URL = "http://as-liveaudio.dun.163.com/v1/liveaudio/callback/results"
     VERSION = "v1.1"
 
     def __init__(self, secret_id, secret_key, business_id):

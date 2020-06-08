@@ -23,7 +23,7 @@ import json
 class ImageCallbackAPIDemo(object):
     """易盾图片离线检测结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163yun.com/v4/image/callback/results"
+    API_URL = "http://as.dun.163.com/v4/image/callback/results"
     VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
