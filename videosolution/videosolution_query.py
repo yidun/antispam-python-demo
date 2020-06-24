@@ -48,12 +48,11 @@ class VideoSolutionQueryAPIDemo(object):
         buff += self.secret_key
         return hashlib.md5(buff.encode("utf8")).hexdigest()
 
-    def check(self):
+    def check(self, params):
         """请求易盾接口
         Returns:
             请求结果，json格式
         """
-        params = {}
         params["secretId"] = self.secret_id
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
@@ -73,10 +72,14 @@ if __name__ == "__main__":
     """示例代码入口"""
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
-
     api = VideoSolutionQueryAPIDemo(SECRET_ID, SECRET_KEY)
-    
-    ret = api.check()
+
+    taskIds: list = ['fss8b041517c46b7b2fff5d5110833d5', 'df3d5cc6b5474fddb92dfe4d4f1cda34']  # 查询参数taskIds
+    params = {
+        "taskIds": taskIds
+    }
+
+    ret = api.check(params)
 
     code: int = ret["code"]
     msg: str = ret["msg"]
