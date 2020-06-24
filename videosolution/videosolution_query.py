@@ -104,7 +104,7 @@ if __name__ == "__main__":
                             images: list = evidences["images"]
                             for imageItem in images:
                                 print("图片信息, dataId:%s, 检测状态:%s, 检测结果:%s", imageItem["dataId"], imageItem["status"],
-                                        imageItem["action"])
+                                      imageItem["action"])
                         elif evidences["audios"] is not None:
                             audios: list = evidences["audios"]
                             for audioItem in audios:

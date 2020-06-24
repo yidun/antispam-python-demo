@@ -87,7 +87,7 @@ if __name__ == "__main__":
             for resultItem in resultArray:
                 dataId: str = resultItem["dataId"]
                 taskId: str = resultItem["taskId"]
-                callback: str = resultItem["callback"] if resultItem["callback"] is None else ""
+                callback: str = resultItem["callback"]
                 checkStatus: int = resultItem["checkStatus"]
                 result: int = resultItem["result"]
                 if resultItem["evidences"] is not None:
