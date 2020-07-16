@@ -87,7 +87,7 @@ if __name__ == "__main__":
         "pageNum": "1",
         "pageSize": "20",
         "callbackStatus": "1",  # 详情查看官网CallbackStatus
-        "orderType": "3",  # 详情查看官网VideoDataOderType
+        "orderType": "3",  # 详情查看官网LiveVideoDataOderType
     }
 
     ret = api.query(params)
@@ -110,5 +110,9 @@ if __name__ == "__main__":
                 endTime: int = row["endTime"]
                 print("成功, count: %s, url: %s, label: %s, labelLevel: %s, callbackStatus: %s, 开始时间: %s, 结束时间: %s" %
                       (count, url, label, labelLevel, callbackStatus, beginTime, endTime))
+        elif status == 20:
+            print("taskId不是7天内数据")
+        elif status == 30:
+            print("taskId不存在")
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
