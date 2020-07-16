@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务视频直播截图结果查询接口python示例代码
+易盾反垃圾云服务视频点播截图查询接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python livedata_query.py
+    2. $ python videoimage_query.py
 """
 __author__ = 'yidun-dev'
-__date__ = '2020/04/28'
+__date__ = '2020/07/15'
 __version__ = '0.2-dev'
 
 import hashlib
@@ -20,11 +20,11 @@ import urllib.parse as urlparse
 import json
 
 
-class LiveDataQueryByTaskIdDemo(object):
-    """视频直播截图结果查询接口示例代码"""
+class VideoImageQueryDemo(object):
+    """视频点播截图查询接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/livevideo/query/image"
-    VERSION = "v1.1"
+    API_URL = "http://as.dun.163.com/v1/video/query/image"
+    VERSION = "v1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -78,15 +78,15 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = LiveDataQueryByTaskIdDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = VideoImageQueryDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     # 私有请求参数
     params = {
-        "taskId": "c633a8cb6d45497c9f4e7bd6d8218443",
-        "levels": "[1,2]",
-        "callbackStatus": "1",
+        "taskId": "4bc345f4bdc74a92b64543b35412d678",
+        "levels": "[0,1,2]",
         "pageNum": "1",
-        "pageSize": "10"
+        "pageSize": "20",
+        "orderType": "3",  # 详情查看官网VideoDataOderType
     }
 
     ret = api.query(params)
@@ -96,21 +96,17 @@ if __name__ == "__main__":
     if code == 200:
         result: dict = ret["result"]
         status: int = result["status"]
-        images: dict = result["images"]
-        count: int = images["count"]
-        rows: list = images["rows"]
         if status == 0:
+            images: dict = result["images"]
+            count: int = images["count"]
+            rows: list = images["rows"]
             for row in rows:
                 url: str = row["url"]
                 label: int = row["label"]
                 labelLevel: int = row["labelLevel"]
-                callbackStatus: int = row["callbackStatus"]
                 beginTime: int = row["beginTime"]
                 endTime: int = row["endTime"]
-            print("live data query success, images: %s" % rows)
-        elif status == 20:
-            print("taskId is expired")
-        elif status == 30:
-            print("taskId is not exist")
+                print("成功, count: %s, url: %s, label: %s, labelLevel: %s, 开始时间: %s, 结束时间: %s" %
+                      (count, url, label, labelLevel, beginTime, endTime))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
