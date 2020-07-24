@@ -74,7 +74,7 @@ if __name__ == "__main__":
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     api = VideoSolutionQueryAPIDemo(SECRET_ID, SECRET_KEY)
 
-    taskIds: list = ['fss8b041517c46b7b2fff5d5110833d5', 'df3d5cc6b5474fddb92dfe4d4f1cda34']  # 查询参数taskIds
+    taskIds: list = ['202b1d65f5854cecadcb24382b681c1a', '0f0345933b05489c9b60635b0c8cc721']  # 查询参数taskIds
     params = {
         "taskIds": taskIds
     }

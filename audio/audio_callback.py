@@ -107,5 +107,16 @@ if __name__ == "__main__":
                         #     hintArray: list = details["hint"]
                         #     subLabels: list = labelItem["subLabels"]
                         print("taskId=%s, 结果: %s，证据信息如下: %s" % (taskId, "不确定" if action == 1 else "不通过", labelArray))
+                    segments: list = result["segments"]
+                    if segments is not None and len(segments) > 0:
+                        for segment in segments:
+                            startTime: int = segment["startTime"]
+                            endTime: int = segment["endTime"]
+                            content: str = segment["content"]
+                            label: int = segment["label"]
+                            level: int = segment["level"]
+                            print("taskId=%s，开始时间：%s秒，结束时间：%s秒，内容：%s， label:%s, level:%s" %
+                                  (taskId, startTime, endTime, content, label, level))
+
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
