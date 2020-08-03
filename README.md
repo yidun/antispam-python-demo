@@ -35,16 +35,21 @@ http://dun.163.com
 ├── video 视频接口演示
 │   ├── livevideo_callback.py 直播流检测结果获取接口演示
 │   ├── livevideo_query.py 直播视频结果查询接口演示
-│   ├── livedata_query.py 直播视频截图结果查询接口演示
+│   ├── liveimage_query.py 直播视频截图结果查询接口演示
 │   ├── livevideo_submit.py 直播流信息提交接口演示
 │   ├── livewall_callback.py 直播电视墙检测结果获取接口演示
 │   ├── livewall_submit.py 直播电视墙信息提交接口演示
 │   ├── video_callback.py 视频点播检测结果获取接口演示
 │   ├── video_query.py 视频点播结果查询接口演示
+│   ├── videoimage_query.py 视频点播截图结果查询接口演示
 │   └── video_submit.py 视频点播信息提交接口演示
 ├── videosolution 点播音视频解决方案接口演示
 │   │── videosolution_callback.py 点播音视频解决方案检测结果获取接口演示
+│   │── videosolution_query.py 点播音视频解决方案结果查询接口演示
 │   └── videosolution_submit.py 点播音视频解决方案在线检测提交接口演示
+├── mediasolution 融媒体解决方案接口演示
+│   │── mediasolution_callback.py 融媒体解决方案离线结果获取接口演示
+│   └── mediasolution_submit.py 融媒体解决方案在线检测提交接口演示
 ├── keyword 敏感词接口演示
 │   │── keyword_submit.py 敏感词提交接口演示
 │   │── keyword_delete.py 敏感词删除接口演示

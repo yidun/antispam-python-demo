@@ -142,7 +142,8 @@ if __name__ == "__main__":
                 taskId: str = result["taskId"]
                 callback: str = result["callback"]
                 dataId: str = result["dataId"]
-                print("taskId:%s, callback:%s, dataId:%s" % (taskId, callback, dataId))
+                content: str = result["content"]
+                print("taskId:%s, callback:%s, dataId:%s, content:%s" % (taskId, callback, dataId, content))
 
                 evidences: dict = result["evidences"]
                 review_evidences: dict = result["reviewEvidences"]
