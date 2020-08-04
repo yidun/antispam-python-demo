@@ -24,7 +24,7 @@ class LiveVideoSubmitAPIDemo(object):
     """视频直播流信息提交接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v3/livevideo/submit"
-    VERSION = "v3"
+    VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
