@@ -23,8 +23,8 @@ import json
 class LiveAudioCallbackAPIDemo(object):
     """直播音频检测结果获取接口示例代码"""
 
-    API_URL = "http://as-liveaudio.dun.163.com/v1/liveaudio/callback/results"
-    VERSION = "v1.1"
+    API_URL = "http://as-liveaudio.dun.163.com/v2/liveaudio/callback/results"
+    VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -142,8 +142,7 @@ if __name__ == "__main__":
                 taskId: str = result["taskId"]
                 callback: str = result["callback"]
                 dataId: str = result["dataId"]
-                content: str = result["content"]
-                print("taskId:%s, callback:%s, dataId:%s, content:%s" % (taskId, callback, dataId, content))
+                print("taskId:%s, callback:%s, dataId:%s" % (taskId, callback, dataId))
 
                 evidences: dict = result["evidences"]
                 review_evidences: dict = result["reviewEvidences"]
