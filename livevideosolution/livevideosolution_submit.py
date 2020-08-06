@@ -23,8 +23,8 @@ import json
 class LiveVideoSolutionSubmitAPIDemo(object):
     """直播音视频解决方案检测提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/livewallsolution/submit"
-    VERSION = "v1.0"
+    API_URL = "http://as.dun.163.com/v2/livewallsolution/submit"
+    VERSION = "v2.1"  # 直播音视频解决方案版本v2.1及以上语音二级细分类结构进行调整
 
     def __init__(self, secret_id, secret_key):
         """

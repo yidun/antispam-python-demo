@@ -24,7 +24,7 @@ class VideoSolutionCallbackAPIDemo(object):
     """点播音视频解决方案检测结果获取接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v1/videosolution/callback/results"
-    VERSION = "v1"
+    VERSION = "v1.1"  # 点播音视频解决方案版本v1.1及以上语音二级细分类subLabels结构进行调整
 
     def __init__(self, secret_id, secret_key):
         """
@@ -89,5 +89,30 @@ if __name__ == "__main__":
                 taskId: str = resultItem["taskId"]
                 result: int = resultItem["result"]
                 print("taskId: %s, result: %s" % (taskId, result))
+                if resultItem["evidences"] is not None:
+                    evidences: dict = resultItem["evidences"]
+                    if evidences["audio"] is not None:
+                        audio: dict = evidences["audio"]
+                        asrStatus: int = audio["asrStatus"]
+                        if asrStatus == 4:
+                            asrResult: int = audio["asrResult"]
+                            print("检测失败: taskId=%s, asrResult=%s" % (taskId, asrResult))
+                        else:
+                            action: int = audio["action"]
+                            labelArray: list = audio["labels"]
+                            if action == 0:
+                                print("taskId=%s，结果：通过" % taskId)
+                            elif action == 1 or action == 2:
+                                for labelItem in labelArray:
+                                    label: int = labelItem["label"]
+                                    level: int = labelItem["level"]
+                                    # 注意二级细分类结构
+                                    subLabels: list = labelItem["subLabels"]
+                                    if subLabels is not None and len(subLabels) > 0:
+                                        for subLabelItem in subLabels:
+                                            subLabel: str = subLabelItem["subLabel"]
+                                            details: dict = subLabelItem["details"]
+                                            hintArray: list = details["hint"]
+                                print("taskId=%s, 结果: %s，证据信息如下: %s" % (taskId, "不确定" if action == 1 else "不通过", labelArray))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
