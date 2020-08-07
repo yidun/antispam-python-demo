@@ -24,7 +24,7 @@ class AudioCallbackAPIDemo(object):
     """音频离线结果获取接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v3/audio/callback/results"
-    VERSION = "v3.1"
+    VERSION = "v3.2"  # 点播语音版本v3.2及以上二级细分类结构进行调整
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -100,12 +100,16 @@ if __name__ == "__main__":
                     if action == 0:
                         print("taskId=%s, 结果: 通过" % taskId)
                     elif action == 1 or action == 2:
-                        # for labelItem in labelArray:
-                        #     label: int = labelItem["label"]
-                        #     level: int = labelItem["level"]
-                        #     details: dict = labelItem["details"]
-                        #     hintArray: list = details["hint"]
-                        #     subLabels: list = labelItem["subLabels"]
+                        for labelItem in labelArray:
+                            label: int = labelItem["label"]
+                            level: int = labelItem["level"]
+                            # 注意二级细分类结构
+                            subLabels: list = labelItem["subLabels"]
+                            if subLabels is not None and len(subLabels) > 0:
+                                for subLabelItem in subLabels:
+                                    subLabel: str = subLabelItem["subLabel"]
+                                    details: dict = subLabelItem["details"]
+                                    hintArray: list = details["hint"]
                         print("taskId=%s, 结果: %s，证据信息如下: %s" % (taskId, "不确定" if action == 1 else "不通过", labelArray))
                     segments: list = result["segments"]
                     if segments is not None and len(segments) > 0:

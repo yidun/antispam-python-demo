@@ -24,7 +24,7 @@ class VideoSolutionSubmitAPIDemo(object):
     """点播音视频解决方案检测提交接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v1/videosolution/submit"
-    VERSION = "v1"
+    VERSION = "v1.1"  # 点播音视频解决方案版本v1.1及以上语音二级细分类subLabels结构进行调整
 
     def __init__(self, secret_id, secret_key):
         """

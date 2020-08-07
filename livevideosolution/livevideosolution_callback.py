@@ -23,8 +23,8 @@ import json
 class LiveVideoSolutionCallbackAPIDemo(object):
     """直播音视频解决方案离线结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/livewallsolution/callback/results"
-    VERSION = "v1.0"
+    API_URL = "http://as.dun.163.com/v2/livewallsolution/callback/results"
+    VERSION = "v2.1"  # 直播音视频解决方案版本v2.1及以上语音二级细分类结构进行调整
 
     def __init__(self, secret_id, secret_key):
         """
@@ -83,10 +83,10 @@ class LiveVideoSolutionCallbackAPIDemo(object):
             if action == 0:
                 print("taskId=%s，结果：通过，时间区间【%s-%s】，证据信息如下：%s" % (taskId, start_time, end_time, segment_array))
             elif action == 1 or action == 2:
-                # for segment_item in segment_array:
-                #     label: int = segment_item["label"]
-                #     level: int = segment_item["level"]
-                #     evidence: str = segment_item["evidence"]
+                for segment_item in segment_array:
+                    label: int = segment_item["label"]
+                    level: int = segment_item["level"]
+                    sub_labels: list = segment_item["subLabels"]
                 print("taskId=%s，结果：%s，时间区间【%s-%s】，证据信息如下：%s" % (taskId, "不确定" if action == 1 else "不通过", start_time, end_time, segment_array))
         print("================")
 
