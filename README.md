@@ -30,6 +30,7 @@ http://dun.163.com
 ├── text 文本接口演示
 │   │── text_callback.py 文本离线结果获取接口演示
 │   │── text_check.py 文本在线检测接口演示
+│   │── text_batch_check.py 文本批量在线检测接口演示
 │   │── text_query.py 文本检测结果查询接口演示
 │   └── text_submit.py 文本批量提交接口演示
 ├── video 视频接口演示
