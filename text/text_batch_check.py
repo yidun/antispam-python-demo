@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-调用易盾反垃圾云服务审核系统文本批量提交接口python示例代码
+易盾反垃圾云服务文本批量在线检测接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python text_submit.py
+    2. $ python text_check.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2019/11/27'
@@ -20,11 +20,11 @@ import urllib.parse as urlparse
 import json
 
 
-class TextSubmitAPIDemo(object):
-    """调用易盾反垃圾云服务审核系统文本批量提交接口示例代码"""
+class TextCheckAPIDemo(object):
+    """文本批量在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/text/submit"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v3/text/batch-check"
+    VERSION = "v3.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -78,24 +78,31 @@ if __name__ == "__main__":
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
     BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = TextSubmitAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = TextCheckAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     # 私有请求参数
     texts: list = []
     text1 = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾测试内容! v1接口!",
-        "action": "0"
+        "content": "易盾批量检测接口！v3接口!",
+        # "dataType": "1",
+        # "ip": "123.115.77.137",
+        # "account": "python@163.com",
+        # "deviceType": "4",
+        # "deviceId": "92B1E5AA-4C3D-4565-A8C2-86E297055088",
+        # "callback": "ebfcad1c-dba1-490c-b4de-e784c2691768",
+        # "publishTime": str(int(time.time() * 1000)),
+        # "callbackUrl": "http://***"  # 主动回调地址url,如果设置了则走主动回调逻辑
     }
     text2 = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "批量提交内容! v1接口!",
-        "action": "1"
+        "content": "易盾批量检测接口！v3接口!",
     }
     texts.append(text1)
     texts.append(text2)
     params = {
-        "texts": json.dumps(texts)
+        "texts": json.dumps(texts),
+        "checkLabels": "200, 500"  # 指定过检分类
     }
 
     ret = api.check(params)
@@ -104,9 +111,28 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         resultArray: list = ret["result"]
-        for result in resultArray:
-            dataId: str = result["dataId"]
-            taskId: str = result["taskId"]
-            print("dataId: %s, 文本提交返回taskId: %s" % (dataId, taskId))
+        if resultArray is not None and len(resultArray) > 0:
+            for result in resultArray:
+                dataId: str = result["dataId"]
+                taskId: str = result["taskId"]
+                action: int = result["action"]
+                status: int = result["status"]
+                print("dataId=%s，批量文本提交返回taskId:%s" % (dataId, taskId))
+                if status == 0:
+                    labelArray: list = result["labels"]
+                    for labelItem in labelArray:
+                        label: int = labelItem["label"]
+                        level: int = labelItem["level"]
+                        details: dict = labelItem["details"]
+                        hintArray: list = details["hint"]
+                        subLabels: list = labelItem["subLabels"]
+                    if action == 0:
+                        print("taskId: %s, 文本机器检测结果: 通过" % taskId)
+                    elif action == 1:
+                        print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
+                    elif action == 2:
+                        print("taskId=%s, 文本机器检测结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
+                else:
+                    print("提交失败")
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
