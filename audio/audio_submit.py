@@ -24,7 +24,7 @@ class AudioSubmitAPIDemo(object):
     """音频信息提交接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v3/audio/submit"
-    VERSION = "v3.2"  # 点播语音版本v3.2及以上二级细分类结构进行调整
+    VERSION = "v3.3"  # 点播语音版本v3.2及以上二级细分类结构进行调整
 
     def __init__(self, secret_id, secret_key, business_id):
         """
