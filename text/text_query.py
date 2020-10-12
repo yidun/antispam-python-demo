@@ -17,6 +17,7 @@ import random
 import urllib.request as urlrequest
 import urllib.parse as urlparse
 import json
+from gmssl import sm3, func
 
 
 class TextQueryByTaskIdsDemo(object):
@@ -47,7 +48,10 @@ class TextQueryByTaskIdsDemo(object):
         for k in sorted(params.keys()):
             buff += str(k) + str(params[k])
         buff += self.secret_key
-        return hashlib.md5(buff.encode("utf8")).hexdigest()
+        if params["signatureMethod"] == "SM3":
+            return sm3.sm3_hash(func.bytes_to_list(bytes(buff, encoding='utf8')))
+        else:
+            return hashlib.md5(buff.encode("utf8")).hexdigest()
 
     def query(self,params):
         """请求易盾接口
@@ -61,6 +65,7 @@ class TextQueryByTaskIdsDemo(object):
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
         params["nonce"] = int(random.random() * 100000000)
+        # params["signatureMethod"] = "SM3"  # 签名方法，默认MD5，支持SM3
         params["signature"] = self.gen_signature(params)
 
         try:
