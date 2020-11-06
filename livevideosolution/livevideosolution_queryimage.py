@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-易盾反垃圾云服务文本在线检测接口python示例代码
+易盾反垃圾云服务直播音视频解决方案查询视频截图信息接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
-    1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python text_check.py
+    1. 修改 SECRET_ID,SECRET_KEY 为对应申请到的值
+    2. $ python livevideosolution_queryimage.py
 """
 __author__ = 'yidun-dev'
-__date__ = '2019/11/27'
+__date__ = '2020/10/29'
 __version__ = '0.2-dev'
 
 import hashlib
@@ -21,22 +21,20 @@ import json
 from gmssl import sm3, func
 
 
-class TextCheckAPIDemo(object):
-    """文本在线检测接口示例代码"""
+class LiveVideoSolutionQueryImageAPIDemo(object):
+    """直播音视频解决方案查询视频截图信息接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v3/text/check"
-    VERSION = "v3.1"
+    API_URL = "http://as.dun.163yun.com/v1/livewallsolution/query/image"
+    VERSION = "v1.0"
 
-    def __init__(self, secret_id, secret_key, business_id):
+    def __init__(self, secret_id, secret_key):
         """
         Args:
             secret_id (str) 产品密钥ID，产品标识
             secret_key (str) 产品私有密钥，服务端生成签名信息使用
-            business_id (str) 业务ID，易盾根据产品业务特点分配
         """
         self.secret_id = secret_id
         self.secret_key = secret_key
-        self.business_id = business_id
 
     def gen_signature(self, params=None):
         """生成签名信息
@@ -62,7 +60,6 @@ class TextCheckAPIDemo(object):
             请求结果，json格式
         """
         params["secretId"] = self.secret_id
-        params["businessId"] = self.business_id
         params["version"] = self.VERSION
         params["timestamp"] = int(time.time() * 1000)
         params["nonce"] = int(random.random() * 100000000)
@@ -82,42 +79,37 @@ if __name__ == "__main__":
     """示例代码入口"""
     SECRET_ID = "your_secret_id"  # 产品密钥ID，产品标识
     SECRET_KEY = "your_secret_key"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
-    BUSINESS_ID = "your_business_id"  # 业务ID，易盾根据产品业务特点分配
-    api = TextCheckAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
+    api = LiveVideoSolutionQueryImageAPIDemo(SECRET_ID, SECRET_KEY)
 
+    # 私有请求参数
     params = {
-        "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾测试内容！"
-        # "dataType": "1"
-        # "ip": "123.115.77.137"
-        # "account": "python@163.com"
-        # "deviceType": "4"
-        # "deviceId": "92B1E5AA-4C3D-4565-A8C2-86E297055088"
-        # "callback": "ebfcad1c-dba1-490c-b4de-e784c2691768"
-        # "publishTime": str(int(time.time() * 1000))
-        # "callbackUrl": "http://***"  # 主动回调地址url,如果设置了则走主动回调逻辑
+        "taskId": "c633a8cb6d45497c9f4e7bd6d8218443",
+        "levels": "[1,2]",
+        "callbackStatus": "1",
+        "pageNum": "1",
+        "pageSize": "10",
     }
-
     ret = api.check(params)
 
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
         result: dict = ret["result"]
-        action: int = result["action"]
-        taskId: str = result["taskId"]
-        labelArray: list = result["labels"]
-        # for labelItem in labelArray:
-        #     label: int = labelItem["label"]
-        #     level: int = labelItem["level"]
-        #     details: dict = labelItem["details"]
-        #     hintArray: list = details["hint"]
-        #     subLabels: list = labelItem["subLabels"]
-        if action == 0:
-            print("taskId: %s, 文本机器检测结果: 通过" % taskId)
-        elif action == 1:
-            print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
-        elif action == 2:
-            print("taskId=%s, 文本机器检测结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
+        status: int = result["status"]
+        images: dict = result["images"]
+        count: int = images["count"]
+        rows: list = images["rows"]
+        if status == 0:
+            for row in rows:
+                url: str = row["url"]
+                label: int = row["label"]
+                labelLevel: int = row["labelLevel"]
+                beginTime: int = row["beginTime"]
+                endTime: int = row["endTime"]
+            print("live data query success, images: %s" % rows)
+        elif status == 20:
+            print("taskId is expired")
+        elif status == 30:
+            print("taskId is not exist")
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

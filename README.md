@@ -11,7 +11,10 @@ http://dun.163.com
 │   │── audio_query.py 点播语音结果查询接口演示
 │   │── audio_submit.py 点播语音在线检测提交接口演示
 │   │── liveaudio_callback.py 直播语音检测结果获取接口演示
-│   └──  liveaudio_check.py 直播语音在线检测提交接口演示
+│   │── liveaudio_querymonitor.py 直播语音人审操作记录获取接口演示
+│   │── liveaudio_querytask.py 直播语音结果获取接口演示
+│   │── liveaudio_feedback.py 直播语音信息更新接口演示
+│   └── liveaudio_check.py 直播语音在线检测提交接口演示
 ├── crawler 网站解决方案接口演示
 │   │── crawler_callback.py 网站解决方案检测结果获取接口演示
 │   └── crawler_submit.py 网站解决方案在线检测提交接口演示
@@ -22,11 +25,20 @@ http://dun.163.com
 ├── image 图片接口演示
 │   ├── image_callback.py 图片离线结果获取接口演示
 │   ├── image_check.py 图片在线检测接口演示
+│   ├── image_asynccheck.py 图片离线检测接口演示
+│   ├── image_asyncresult.py 图片离线检测结果查询接口演示
 │   ├── image_query.py 图片检测结果查询接口演示
+│   ├── imagelist_delete.py 图片名单删除接口演示
+│   ├── imagelist_query.py 图片名单查询接口演示
+│   ├── imagelist_submit.py 图片名单添加接口演示
 │   └── image_submit.py 图片批量提交接口演示
 ├── livevideosolution 直播音视频解决方案接口演示
 │   │── livevideosolution_callback.py 直播音视频解决方案离线结果获取接口演示
-│   └── livevideosolution_submit.py 直播音视频解决方案在线检测提交接口演示
+│   │── livevideosolution_submit.py 直播音视频解决方案在线检测提交接口演示
+│   │── livevideosolution_feedback.py 直播音视频解决方案信息更新接口演示
+│   │── livevideosolution_queryaudio.py 直播音视频解决方案查询音频断句信息接口演示
+│   │── livevideosolution_queryimage.py 直播音视频解决方案查询视频截图信息接口演示
+│   └── livevideosolution_querymonitor.py 直播音视频解决方案人审操作记录获取接口演示
 ├── text 文本接口演示
 │   │── text_callback.py 文本离线结果获取接口演示
 │   │── text_check.py 文本在线检测接口演示
@@ -37,8 +49,10 @@ http://dun.163.com
 │   ├── livevideo_callback.py 直播流检测结果获取接口演示
 │   ├── livevideo_query.py 直播视频结果查询接口演示
 │   ├── liveimage_query.py 直播视频截图结果查询接口演示
-│   ├── livevideo_submit.py 直播流信息提交接口演示
+│   ├── livevideo_submit.py 直播视频信息提交接口演示
+│   ├── livevideo_feedback.py 直播视频信息更新接口演示
 │   ├── livewall_callback.py 直播电视墙检测结果获取接口演示
+│   ├── livewall_querymonitor.py 直播电视墙人审操作记录获取接口演示
 │   ├── livewall_submit.py 直播电视墙信息提交接口演示
 │   ├── video_callback.py 视频点播检测结果获取接口演示
 │   ├── video_query.py 视频点播结果查询接口演示

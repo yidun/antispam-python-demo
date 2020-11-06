@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""易
-盾直播音频结果获取接口python示例代码
+"""
+易盾直播音频结果获取接口python示例代码
 接口文档: http://dun.163.com/api.html
 python版本：python3.7
 运行:
@@ -49,7 +49,7 @@ class LiveAudioCallbackAPIDemo(object):
         for k in sorted(params.keys()):
             buff += str(k) + str(params[k])
         buff += self.secret_key
-        if params["signatureMethod"] == "SM3":
+        if "signatureMethod" in params.keys() and params["signatureMethod"] == "SM3":
             return sm3.sm3_hash(func.bytes_to_list(bytes(buff, encoding='utf8')))
         else:
             return hashlib.md5(buff.encode("utf8")).hexdigest()
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     api = LiveAudioCallbackAPIDemo(SECRET_ID, SECRET_KEY, BUSINESS_ID)
 
     params = {
-        "taskId": xxx,
+        "taskId": "xxx",
         "startTime": 1578252600000,
         "endTime": 1578253200000
     }
