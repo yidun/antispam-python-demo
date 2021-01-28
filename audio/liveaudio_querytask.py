@@ -24,7 +24,7 @@ from gmssl import sm3, func
 class LiveAudioCallbackAPIDemo(object):
     """调用易盾反垃圾云服务查询直播语音片段离线结果接口API示例"""
 
-    API_URL = "http://as-liveaudio.dun.163.com/v1/liveaudio/query/task"
+    API_URL = "http://as.dun.163.com/v1/liveaudio/query/task"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key, business_id):

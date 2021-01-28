@@ -24,7 +24,7 @@ from gmssl import sm3, func
 class LiveAudioQueryMonitorAPIDemo(object):
     """调用易盾反垃圾云服务直播音频人审操作记录获取接口API示例"""
 
-    API_URL = "http://as-liveaudio.dun.163.com/v1/liveaudio/query/monitor"
+    API_URL = "http://as.dun.163.com/v1/liveaudio/query/monitor"
     VERSION = "v1.0"
 
     def __init__(self, secret_id, secret_key, business_id):
