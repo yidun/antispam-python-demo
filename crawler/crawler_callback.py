@@ -22,7 +22,7 @@ from gmssl import sm3, func
 
 
 class CrawlerCallbackAPIDemo(object):
-    """点播音视频解决方案检测结果获取接口示例代码"""
+    """网站检测解决方案检测结果获取接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v1/crawler/callback/results"
     VERSION = "v1.0"
