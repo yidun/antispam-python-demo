@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class ImageCallbackAPIDemo(object):
     """易盾图片离线检测结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v4/image/callback/results"
-    VERSION = "v4"
+    API_URL = "http://as.dun.163.com/v5/image/callback/results"
+    VERSION = "v5"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -89,25 +89,30 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        antispamArray: list = ret["antispam"]
-        if len(antispamArray) == 0:
-            print("暂时没有人工复审结果需要获取, 请稍后重试!")
-        for antispamResult in antispamArray:
-            name: str = antispamResult["name"]
-            taskId: str = antispamResult["taskId"]
-            action: int = antispamResult["action"]
-            labelArray: list = antispamResult["labels"]
-            print("taskId: %s, name: %s, action: %s" % (taskId, name, action))
-            # 产品需根据自身需求，自行解析处理，本示例只是简单判断分类级别
-            for labelItem in labelArray:
-                label: int = labelItem["label"]
-                level: int = labelItem["level"]
-                rate: float = labelItem["rate"]
-                print("label: %s, level: %s, rate: %s" % (label, level, rate))
-            if action == 0:
-                print("#图片人工复审结果: 最高等级为\"正常\"\n")
-            elif action == 2:
-                print("#图片人工复审结果: 最高等级为\"确定\"\n")
+        resultList: list = ret["result"]
+        for resultItem in resultList:
+            antispamResult: dict = resultItem["antispam"]
+            if antispamResult is None:
+                print("暂时没有审核结果需要获取, 请稍后重试!")
+            else:
+                name: str = antispamResult["name"]
+                taskId: str = antispamResult["taskId"]
+                suggestion: int = antispamResult["suggestion"]
+                resultType: int = antispamResult["resultType"]
+                censorSource: int = antispamResult["censorSource"]
+                censorTime: int = antispamResult["censorTime"]
+                labelArray: list = antispamResult["labels"]
+                print("taskId: %s, name: %s, suggestion: %s" % (taskId, name, suggestion))
+                # 产品需根据自身需求，自行解析处理，本示例只是简单判断分类级别
+                for labelItem in labelArray:
+                    label: int = labelItem["label"]
+                    level: int = labelItem["level"]
+                    rate: float = labelItem["rate"]
+                    print("label: %s, level: %s, rate: %s" % (label, level, rate))
+                if suggestion == 0:
+                    print("#图片审核结果: 最高等级为\"正常\"\n")
+                elif suggestion == 2:
+                    print("#图片审核结果: 最高等级为\"确定\"\n")
 
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

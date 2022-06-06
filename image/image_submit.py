@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class ImageSubmitAPIDemo(object):
     """图片批量提交接口"""
 
-    API_URL = "http://as.dun.163.com/v1/image/submit"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v5/image/submit"
+    VERSION = "v5"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -121,6 +121,7 @@ if __name__ == "__main__":
         for result in resultArray:
             name: str = result["name"]
             taskId: str = result["taskId"]
+            dataId: str = result["dataId"]
             print("图片提交返回, name: %s, taskId: %s" % (name, taskId))
 
     else:

@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class ImageAsyncCheckAPIDemo(object):
     """图片离线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v4/image/asyncCheck"
-    VERSION = "v4"
+    API_URL = "http://as.dun.163.com/v5/image/asyncCheck"
+    VERSION = "v5"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -111,11 +111,13 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        resultArray: list = ret["result"]
-        for result in resultArray:
-            name: str = result["name"]
-            taskId: str = result["taskId"]
-            status: int = result["status"]
-            print("taskId=%s，status=%s，name=%s" % (taskId, status, name))
+        result: dict = ret["result"]
+        dealingCount: int = ret["dealingCount"]
+        checkImageArray: list = result["checkImages"]
+        for checkImage in checkImageArray:
+            name: str = checkImage["name"]
+            taskId: str = checkImage["taskId"]
+            dataId: str = checkImage["dataId"]
+            print("taskId=%s，dataId=%s，name=%s" % (taskId, dataId, name))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class ImageCheckAPIDemo(object):
     """图片在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v4/image/check"
-    VERSION = "v4"
+    API_URL = "http://as.dun.163.com/v5/image/check"
+    VERSION = "v5.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -114,17 +114,18 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         # 图片反垃圾结果
-        antispamArray: list = ret["antispam"]
-        for antispamResult in antispamArray:
+        resultList: list = ret["result"]
+        for resultItem in resultList:
+            antispamResult: dict = resultItem["antispam"]
             name: str = antispamResult["name"]
             taskId: str = antispamResult["taskId"]
             status: int = antispamResult["status"]
-            # 图片检测状态码，定义为：0：检测成功，610：图片下载失败，620：图片格式错误，630：其它
-            if status == 0:
+            # 检测状态：2 检测成功、3 检测失败
+            if status == 2:
                 # 图片维度结果
-                action: int = antispamResult["action"]
+                suggestion: int = antispamResult["suggestion"]
                 labelArray: list = antispamResult["labels"]
-                print("taskId: %s, status: %s, name: %s, action: %s" % (taskId, status, name, action))
+                print("taskId: %s, status: %s, name: %s, suggestion: %s" % (taskId, status, name, suggestion))
                 # 产品需根据自身需求，自行解析处理，本示例只是简单判断分类级别
                 for labelItem in labelArray:
                     label: int = labelItem["label"]
@@ -132,18 +133,18 @@ if __name__ == "__main__":
                     rate: float = labelItem["rate"]
                     subLabels: list = labelItem["subLabels"]
                     print("label: %s, level: %s, rate: %s, subLabels: %s" % (label, level, rate, subLabels))
-                if action == 0:
+                if suggestion == 0:
                     print("#图片机器检测结果: 最高等级为\"正常\"\n")
-                elif action == 1:
+                elif suggestion == 1:
                     print("#图片机器检测结果: 最高等级为\"嫌疑\"\n")
-                elif action == 2:
+                elif suggestion == 2:
                     print("#图片机器检测结果: 最高等级为\"确定\"\n")
             else:
-                # status对应失败状态码：610：图片下载失败，620：图片格式错误，630：其它
-                print("图片检测失败, taskId: %s, status: %s, name: %s" % (taskId, status, name))
-        # 图片OCR结果
-        ocrArray: list = ret["ocr"]
-        for ocrResult in ocrArray:
+                failureReason: int = antispamResult["failureReason"]
+                # 检测失败原因，当status为3（检测失败）时返回：610 图片下载失败、620 图片格式错误、630 其他
+                print("图片检测失败, taskId: %s, failureReason: %s, name: %s" % (taskId, failureReason, name))
+            # 图片OCR结果
+            ocrResult: dict = resultItem["ocr"]
             name: str = ocrResult["name"]
             taskId: str = ocrResult["taskId"]
             details: list = ocrResult["details"]
@@ -153,9 +154,8 @@ if __name__ == "__main__":
                 content: str = detail["content"]
                 lineContents: list = detail["lineContents"]
                 print("识别ocr文本内容: %s, ocr片段及坐标信息: %s" % (content, lineContents))
-        # 图片人脸检测结果
-        faceArray: list = ret["face"]
-        for faceResult in faceArray:
+            # 图片人脸检测结果
+            faceResult: dict = resultItem["face"]
             name: str = faceResult["name"]
             taskId: str = faceResult["taskId"]
             details: list = faceResult["details"]
@@ -165,9 +165,8 @@ if __name__ == "__main__":
                 faceNumber: int = detail["faceNumber"]
                 faceContents: list = detail["faceContents"]
                 print("识别人脸数量: %s, 人物信息及坐标信息: %s" % (faceNumber, faceContents))
-        # 图片质量检测结果
-        qualityArray: list = ret["quality"]
-        for qualityResult in qualityArray:
+            # 图片质量检测结果
+            qualityResult: dict = resultItem["quality"]
             name: str = qualityResult["name"]
             taskId: str = qualityResult["taskId"]
             details: list = qualityResult["details"]
