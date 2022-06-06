@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class CrawlerSubmitAPIDemo(object):
     """网站检测解决方案检测提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/crawler/submit"
-    VERSION = "v1.0"
+    API_URL = "http://as.dun.163.com/v3/crawler/submit"
+    VERSION = "v3.0"
 
     def __init__(self, secret_id, secret_key):
         """
