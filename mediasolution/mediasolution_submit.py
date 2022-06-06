@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class MediaSolutionSubmitAPIDemo(object):
     """融媒体解决方案检测提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/mediasolution/submit"
-    VERSION = "v1.0"
+    API_URL = "http://as.dun.163.com/v2/mediasolution/submit"
+    VERSION = "v2.0"
 
     def __init__(self, secret_id, secret_key):
         """
@@ -122,12 +122,14 @@ if __name__ == "__main__":
 
     ret = api.check(params)
 
+    # 展示了异步结果返回示例，同步结果返回示例请参考官网开发文档
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
         result: dict = ret["result"]
-        taskId: str = result["taskId"]
-        dataId: str = result["dataId"]
+        antispam: dict = ret["antispam"]
+        taskId: str = antispam["taskId"]
+        dataId: str = antispam["dataId"]
         print("SUBMIT SUCCESS: taskId=%s, dataId=%s" % (taskId, dataId))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
