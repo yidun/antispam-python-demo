@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 print("获取结果异常, status: %s" % status)
                 continue
             taskId: str = result["taskId"]
-            antispam: int = result["antispam"]
+            antispam: dict = result["antispam"]
             pictureArray: list = antispam["pictures"]
             for picture in pictureArray:
                 pictureType: int = picture["type"]

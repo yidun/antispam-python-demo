@@ -94,7 +94,7 @@ if __name__ == "__main__":
             print("暂无回调数据")
         else:
             for result in resultArray:
-                antispam: int = result["antispam"]
+                antispam: dict = result["antispam"]
                 status: int = antispam["status"]
                 if status != 0:  # 异常，异常码定义见官网文档
                     print("视频异常, status: %s" % status)
