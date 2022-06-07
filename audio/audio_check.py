@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class AudioSubmitAPIDemo(object):
     """音频信息在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/audio/check"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v2/audio/check"
+    VERSION = "v2.1"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -96,68 +96,58 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         res: dict = ret["result"]
-        taskId: str = res["taskId"]
-        status: int = res["status"]
-        if status == 0:
-            print("CHECK SUCCESS: taskId=%s" % taskId)
-            antispamArray: list = res["antispam"]
-            if antispamArray is None or len(antispamArray) == 0:
-                print("暂无反垃圾检测数据")
-            else:
-                for result in antispamArray:
-                    taskId: str = result["taskId"]
-                    action: int = result["action"]
-                    labelArray: list = result["labels"]
-                    if action == 0:
-                        print("taskId=%s，结果：通过" % taskId)
-                    elif action == 2:
+        antispam: dict = res["antispam"]
+        if antispam is not None:
+            taskId: str = antispam["taskId"]
+            status: int = antispam["status"]
+            if status == 2:
+                print("CHECK SUCCESS: taskId=%s" % taskId)
+                suggestion: int = antispam["suggestion"]
+                resultType: int = antispam["resultType"]
+                segmentArray: list = antispam["segments"]
+                if segmentArray is None or len(segmentArray) == 0:
+                    print("暂无反垃圾检测数据")
+                else:
+                    for segment in segmentArray:
+                        startTime: int = antispam["startTime"]
+                        endTime: int = antispam["endTime"]
+                        content: str = antispam["content"]
+                        labelArray: list = antispam["labels"]
                         for labelInfo in labelArray:
                             label: int = labelInfo["label"]
                             level: int = labelInfo["level"]
-                            details: dict = labelInfo["details"]
-                            hintArray: list = details["hint"]
                             subLabels: list = labelInfo["subLabels"]
-                        print("uuid=%s，结果：不通过，分类信息如下：%s" % (taskId, labelArray))
-
-            languageArray: list = res["language"]
-            if languageArray is None or len(languageArray) == 0:
-                print("暂无语种检测数据")
-            else:
-                for result in languageArray:
-                    taskId: str = result["taskId"]
-                    detailsArray: list = result["details"]
-                    if detailsArray is not None and len(detailsArray) > 0:
-                        for language in detailsArray:
-                            typeLan: str = language["type"]
-                            segmentsArray: list = language["segments"]
-                            if segmentsArray is not None and len(segmentsArray) > 0:
-                                for segment in segmentsArray:
-                                    print("taskId=%s，语种类型=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, typeLan, segment["startTime"], segment["endTime"]))
-
-            asrArray: list = res["asr"]
-            if asrArray is None or len(asrArray) == 0:
-                print("暂无语音翻译数据")
-            else:
-                for result in asrArray:
-                    taskId: str = result["taskId"]
-                    detailsArray: list = result["details"]
-                    if detailsArray is not None and len(detailsArray) > 0:
-                        for asr in detailsArray:
-                            startTime: int = asr["startTime"]
-                            endTime: int = asr["endTime"]
-                            content: str = asr["content"]
-                            print("taskId=%s，文字翻译结果=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, content, startTime, endTime))
-
-            voiceArray: list = res["voice"]
-            if voiceArray is None or len(voiceArray) == 0:
-                print("暂无翻译数据")
-            else:
-                for result in voiceArray:
-                    mainGender: str = result["mainGender"]
-                    taskId: str = result["taskId"]
-                    detailsArray: list = result["details"]
-                    print("taskId=%s，人声属性=%s" % (taskId, mainGender))
-        elif status == 1:
-            print("CHECK TIMEOUT: taskId=%s, status=%s" % (taskId, status))
+        language: dict = res["language"]
+        if language is not None:
+            taskId: str = language["taskId"]
+            dataId: str = language["dataId"]
+            callback: str = language["callback"]
+            detailsArray: list = language["details"]
+            if detailsArray is not None and len(detailsArray) > 0:
+                for detail in detailsArray:
+                    typeLan: str = detail["type"]
+                    segmentsArray: list = detail["segments"]
+                    if segmentsArray is not None and len(segmentsArray) > 0:
+                        for segment in segmentsArray:
+                            print("taskId=%s，语种类型=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, typeLan, segment["startTime"], segment["endTime"]))
+        asr: dict = res["asr"]
+        if asr is not None:
+            taskId: str = asr["taskId"]
+            dataId: str = asr["dataId"]
+            callback: str = asr["callback"]
+            detailsArray: list = asr["details"]
+            if detailsArray is not None and len(detailsArray) > 0:
+                for detail in detailsArray:
+                    startTime: int = detail["startTime"]
+                    endTime: int = detail["endTime"]
+                    content: str = detail["content"]
+                    print("taskId=%s，文字翻译结果=%s，开始时间=%s秒，结束时间=%s秒" % (taskId, content, startTime, endTime))
+        voice: dict = res["voice"]
+        if voice is not None:
+            taskId: str = voice["taskId"]
+            dataId: str = voice["dataId"]
+            callback: str = voice["callback"]
+            detail: dict = voice["detail"]
+            print("taskId=%s，人声属性=%s" % (taskId, detail["mainGender"]))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

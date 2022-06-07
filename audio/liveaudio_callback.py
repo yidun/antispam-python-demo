@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class LiveAudioCallbackAPIDemo(object):
     """直播音频检测结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v3/liveaudio/callback/results"
-    VERSION = "v3"  # 直播语音版本v2.1及以上二级细分类结构进行调整
+    API_URL = "http://as.dun.163.com/v4/liveaudio/callback/results"
+    VERSION = "v4"  # 直播语音版本v2.1及以上二级细分类结构进行调整
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -139,35 +139,32 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        res: dict = ret["result"]
-        antispamArray: list = res["antispam"]
-        if antispamArray is None or len(antispamArray) == 0:
-            print("暂时没有结果需要获取，请稍后重试！")
+        resultArray: list = ret["result"]
+        if resultArray is None or len(resultArray) == 0:
+            print("暂时没有结果需要获取, 请稍后重试!")
         else:
-            for result in antispamArray:
-                taskId: str = result["taskId"]
-                callback: str = result["callback"]
-                dataId: str = result["dataId"]
-                print("taskId:%s, callback:%s, dataId:%s" % (taskId, callback, dataId))
-                evidences: dict = result["evidences"]
-                review_evidences: dict = result["reviewEvidences"]
-                if evidences is not None:
-                    api.parse_machine(evidences, taskId)
-                elif review_evidences is not None:
-                    api.parse_human(review_evidences, taskId)
-                else:
-                    print("Invalid result: %s", result)
-
-        asrArray: list = res["asr"]
-        if asrArray is None or len(asrArray) == 0:
-            print("暂时没有结果需要获取，请稍后重试！")
-        else:
-            for result in asrArray:
-                taskId: str = result["taskId"]
-                startTime: int = result["startTime"]
-                endTime: int = result["endTime"]
-                content: str = result["content"]
-                print("taskId=%s，content=%s，startTime=%s秒，endTime=%s秒" % (taskId, content, startTime, endTime))
-
+            for result in resultArray:
+                antispam: dict = result["antispam"]
+                if antispam is not None:
+                    taskId: str = antispam["taskId"]
+                    status: int = antispam["status"]
+                    callback: str = antispam["callback"]
+                    dataId: str = antispam["dataId"]
+                    print("taskId:%s, callback:%s, dataId:%s" % (taskId, callback, dataId))
+                    evidences: dict = result["evidences"]
+                    review_evidences: dict = result["reviewEvidences"]
+                    if evidences is not None:
+                        api.parse_machine(evidences, taskId)
+                    elif review_evidences is not None:
+                        api.parse_human(review_evidences, taskId)
+                    else:
+                        print("Invalid result: %s", result)
+                asr: dict = result["asr"]
+                if asr is not None:
+                    taskId: str = asr["taskId"]
+                    startTime: int = asr["startTime"]
+                    endTime: int = asr["endTime"]
+                    content: str = asr["content"]
+                    print("taskId=%s，content=%s，startTime=%s秒，endTime=%s秒" % (taskId, content, startTime, endTime))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
