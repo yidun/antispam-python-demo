@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class FileSolutionCallbackAPIDemo(object):
     """文档解决方案结果获取接口"""
 
-    API_URL = "http://as-file.dun.163.com/v1/file/callback/results"
-    VERSION = "v1.1"
+    API_URL = "http://as-file.dun.163.com/v2/file/callback/results"
+    VERSION = "v2.0"
 
     def __init__(self, secret_id, secret_key):
         """
@@ -90,11 +90,13 @@ if __name__ == "__main__":
             print("Can't find Callback Data")
             quit()
         for resultItem in resultArray:
-            dataId: str = resultItem["dataId"]
-            taskId: str = resultItem["taskId"]
-            result: int = resultItem["result"]
-            callback: str = resultItem["callback"] if resultItem["callback"] is None else ""
-            evidences: dict = resultItem["evidences"]
-            print("SUCCESS: dataId=%s, taskId=%s, result=%s, callback=%s, evidences=%s" % (dataId, taskId, result, callback, evidences))
+            antispam: dict = resultItem["antispam"]
+            if antispam is not None:
+                dataId: str = antispam["dataId"]
+                taskId: str = antispam["taskId"]
+                resultType: int = antispam["resultType"]
+                suggestion: int = antispam["suggestion"]
+                evidences: dict = antispam["evidences"]
+                print("SUCCESS: dataId=%s, taskId=%s, evidences=%s" % (dataId, taskId, evidences))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

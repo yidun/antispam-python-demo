@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class FileSolutionSubmitAPIDemo(object):
     """文档解决方案检测提交接口示例代码"""
 
-    API_URL = "http://as-file.dun.163.com/v1/file/submit"
-    VERSION = "v1.1"
+    API_URL = "http://as-file.dun.163.com/v2/file/submit"
+    VERSION = "v2.0"
 
     def __init__(self, secret_id, secret_key):
         """
