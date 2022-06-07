@@ -5,7 +5,7 @@
 python版本：python3.7
 运行:
     1. 修改 SECRET_ID,SECRET_KEY,BUSINESS_ID 为对应申请到的值
-    2. $ python text_query.py
+    2. $ python mediasolution_query.py
 """
 __author__ = 'yidun-dev'
 __date__ = '2019/11/27'

@@ -112,7 +112,7 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         result: dict = ret["result"]
-        dealingCount: int = ret["dealingCount"]
+        dealingCount: int = result["dealingCount"]
         checkImageArray: list = result["checkImages"]
         for checkImage in checkImageArray:
             name: str = checkImage["name"]
