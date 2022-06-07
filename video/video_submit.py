@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class VideoSubmitAPIDemo(object):
     """视频点播信息提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v3/video/submit"
-    VERSION = "v3.1"
+    API_URL = "http://as.dun.163.com/v4/video/submit"
+    VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
         """

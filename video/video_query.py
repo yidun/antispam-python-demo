@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class VideoQueryByTaskIdsDemo(object):
     """视频点播查询接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/video/query/task"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v4/video/query/task"
+    VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -103,23 +103,18 @@ if __name__ == "__main__":
                 print("获取结果异常, status: %s" % status)
                 continue
             taskId: str = result["taskId"]
-            callback: str = result["callback"]
-            videoLevel: str = result["level"]
-            if videoLevel == 0:
-                print("正常, callback: %s" % callback)
-            elif videoLevel == 1 or videoLevel == 2:
-                evidenceArray: list = result["evidences"]
-                for evidence in evidenceArray:
-                    beginTime: int = evidence["beginTime"]
-                    endTime: int = evidence["endTime"]
-                    type: int = evidence["type"]
-                    url: str = evidence["url"]
-                    labelArray: list = evidence["labels"]
-                    for labelItem in labelArray:
-                        label: int = labelItem["label"]
-                        level: int = labelItem["level"]
-                        rate: float = labelItem["rate"]
-                    print("taskId: %s, %s, callback: %s, 证据信息: %s, 证据分类: %s" %
-                          (taskId, "不确定" if videoLevel == 1 else "确定", callback, evidence, labelArray))
+            antispam: int = result["antispam"]
+            pictureArray: list = antispam["pictures"]
+            for picture in pictureArray:
+                pictureType: int = picture["type"]
+                url: str = picture["url"]
+                startTime: int = picture["startTime"]
+                endTime: int = picture["endTime"]
+                labels: list = picture["labels"]
+                for labelItem in labels:
+                    label: int = labelItem["label"]
+                    level: int = labelItem["level"]
+                    rate: str = labelItem["rate"]
+                    subLabels: list = labelItem["subLabels"]
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))
