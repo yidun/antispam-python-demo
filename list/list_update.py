@@ -24,7 +24,7 @@ from gmssl import sm3, func
 class ListUpdateDemo(object):
     """易盾反垃圾云服务名单更新接口python示例代码"""
 
-    API_URL = "http://as.dun.163.com/v2/image/list/update"
+    API_URL = "http://as.dun.163.com/v2/list/update"
     VERSION = "v2"
 
     def __init__(self, secret_id, secret_key, business_id):
