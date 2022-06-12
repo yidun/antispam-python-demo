@@ -107,10 +107,10 @@ if __name__ == "__main__":
                             print("暂无反垃圾检测数据")
                         else:
                             for segment in segmentArray:
-                                startTime: int = antispam["startTime"]
-                                endTime: int = antispam["endTime"]
-                                content: str = antispam["content"]
-                                labelArray: list = antispam["labels"]
+                                startTime: int = segment["startTime"]
+                                endTime: int = segment["endTime"]
+                                content: str = segment["content"]
+                                labelArray: list = segment["labels"]
                                 for labelInfo in labelArray:
                                     label: int = labelInfo["label"]
                                     level: int = labelInfo["level"]

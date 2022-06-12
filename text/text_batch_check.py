@@ -25,7 +25,7 @@ class TextCheckAPIDemo(object):
     """文本批量在线检测接口示例代码"""
 
     API_URL = "http://as.dun.163.com/v5/text/batch-check"
-    VERSION = "v3.2"
+    VERSION = "v5.2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
