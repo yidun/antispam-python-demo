@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class TextCheckAPIDemo(object):
     """文本在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v3/text/check"
-    VERSION = "v3.1"
+    API_URL = "http://as.dun.163.com/v5/text/check"
+    VERSION = "v5.2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -104,20 +104,29 @@ if __name__ == "__main__":
     msg: str = ret["msg"]
     if code == 200:
         result: dict = ret["result"]
-        action: int = result["action"]
-        taskId: str = result["taskId"]
-        labelArray: list = result["labels"]
+        antispam: dict = result["antispam"]
+        taskId: str = antispam["taskId"]
+        dataId: str = antispam["dataId"]
+        suggestion: int = antispam["suggestion"]
+        suggestionLevel: int = antispam["suggestionLevel"]
+        resultType: int = antispam["resultType"]
+        censorType: int = antispam["censorType"]
+        strategyVersions: list = antispam["strategyVersions"]
+        # for strategyVersion in strategyVersions:
+        #    label: int = strategyVersion["label"]
+        #    version: str = strategyVersion["version"]
+        isRelatedHit: bool = antispam["isRelatedHit"]
+        labelArray: list = antispam["labels"]
         # for labelItem in labelArray:
-        #     label: int = labelItem["label"]
-        #     level: int = labelItem["level"]
-        #     details: dict = labelItem["details"]
-        #     hintArray: list = details["hint"]
-        #     subLabels: list = labelItem["subLabels"]
-        if action == 0:
+        #    label: int = labelItem["label"]
+        #    rate: int = labelItem["rate"]
+        #    level: int = labelItem["level"]
+        #    subLabels: list = labelItem["subLabels"]
+        if suggestion == 0:
             print("taskId: %s, 文本机器检测结果: 通过" % taskId)
-        elif action == 1:
+        elif suggestion == 1:
             print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
-        elif action == 2:
+        elif suggestion == 2:
             print("taskId=%s, 文本机器检测结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class TextCheckAPIDemo(object):
     """文本批量在线检测接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v3/text/batch-check"
-    VERSION = "v3.1"
+    API_URL = "http://as.dun.163.com/v5/text/batch-check"
+    VERSION = "v5.2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -88,8 +88,8 @@ if __name__ == "__main__":
     # 私有请求参数
     texts: list = []
     text1 = {
-        "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾批量检测接口！v3接口!",
+        "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691761",
+        "content": "易盾批量检测接口！v5接口!",
         # "dataType": "1",
         # "ip": "123.115.77.137",
         # "account": "python@163.com",
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     }
     text2 = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾批量检测接口！v3接口!",
+        "content": "易盾批量检测接口！v5接口!",
     }
     texts.append(text1)
     texts.append(text2)
@@ -118,26 +118,25 @@ if __name__ == "__main__":
         resultArray: list = ret["result"]
         if resultArray is not None and len(resultArray) > 0:
             for result in resultArray:
-                dataId: str = result["dataId"]
-                taskId: str = result["taskId"]
-                action: int = result["action"]
-                status: int = result["status"]
+                antispam: dict = result["antispam"]
+                dataId: str = antispam["dataId"]
+                taskId: str = antispam["taskId"]
+                suggestion: int = antispam["suggestion"]
+                resultType: int = antispam["resultType"]
+                censorType: int = antispam["censorType"]
                 print("dataId=%s，批量文本提交返回taskId:%s" % (dataId, taskId))
-                if status == 0:
-                    labelArray: list = result["labels"]
-                    for labelItem in labelArray:
-                        label: int = labelItem["label"]
-                        level: int = labelItem["level"]
-                        details: dict = labelItem["details"]
-                        hintArray: list = details["hint"]
-                        subLabels: list = labelItem["subLabels"]
-                    if action == 0:
-                        print("taskId: %s, 文本机器检测结果: 通过" % taskId)
-                    elif action == 1:
-                        print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
-                    elif action == 2:
-                        print("taskId=%s, 文本机器检测结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
-                else:
-                    print("提交失败")
+                labelArray: list = antispam["labels"]
+                for labelItem in labelArray:
+                    label: int = labelItem["label"]
+                    rate: int = labelItem["rate"]
+                    level: int = labelItem["level"]
+                    subLabels: list = labelItem["subLabels"]
+                if suggestion == 0:
+                    print("taskId: %s, 文本机器检测结果: 通过" % taskId)
+                elif suggestion == 1:
+                    print("taskId: %s, 文本机器检测结果: 嫌疑, 需人工复审, 分类信息如下: %s" % (taskId, labelArray))
+                elif suggestion == 2:
+                    print("taskId=%s, 文本机器检测结果: 不通过, 分类信息如下: %s" % (taskId, labelArray))
+
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

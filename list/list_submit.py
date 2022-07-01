@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class KeywordSubmitAPIDemo(object):
     """名单提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/list/submit"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v2/list/submit"
+    VERSION = "v2"
 
     def __init__(self, secret_id, secret_key):
         """
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     params = {
         "listType": "2",  # 1: 白名单，2: 黑名单，4: 必审名单，8: 预审名单
         "entityType": "1",  # 1: 用户名单，2: IP名单
-        "lists": ",".join(lists)
+        "entities": json.dumps(lists)
     }
 
     ret = api.check(params)
@@ -94,7 +94,12 @@ if __name__ == "__main__":
     code: int = ret["code"]
     msg: str = ret["msg"]
     if code == 200:
-        result: bool = ret["result"]
-        print("名单提交结果: %s" % result)
+        resultArray: list = ret["result"]
+        for result in resultArray:
+            uuid: str = result["uuid"]
+            entity: str = result["entity"]
+            entityType: int = result["entityType"]
+            exist: bool = ret["exist"]
+            print("名单是否已存在: %s" % exist)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

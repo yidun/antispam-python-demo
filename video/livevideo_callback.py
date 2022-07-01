@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class LiveVideoCallbackAPIDemo(object):
     """视频直播离线结果获取接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v2/livevideo/callback/results"
-    VERSION = "v2.1"
+    API_URL = "http://as.dun.163.com/v4/livevideo/callback/results"
+    VERSION = "v4"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -91,17 +91,22 @@ if __name__ == "__main__":
     if code == 200:
         resultArray: list = ret["result"]
         for result in resultArray:
-            taskId: str = result["taskId"]
-            callback: str = result["callback"]
-            evidence: dict = result["evidence"]
-            labelArray: list = result["labels"]
-            if (labelArray is not None) and len(labelArray) == 0:  # 检测正常
-                print("正常, taskId: %s, callback: %s, 证据信息: %s" % (taskId, callback, evidence))
-            elif len(labelArray) > 0:  # 检测异常
-                for labelItem in labelArray:
-                    label: int = labelItem["label"]
-                    level: int = labelItem["level"]
-                    rate: float = labelItem["rate"]
-                    print("异常, taskId: %s, callback: %s, 分类: %s, 证据信息: %s" % (taskId, callback, labelItem, evidence))
+            antispam: dict = result["antispam"]
+            taskId: str = antispam["taskId"]
+            dataId: str = antispam["dataId"]
+            censorSource: int = antispam["censorSource"]
+            status: int = antispam["status"]
+            if status == 2:
+                evidence: dict = antispam["evidence"]
+                labelArray: list = antispam["labels"]
+                if len(labelArray) > 0:  # 检测异常
+                    for labelItem in labelArray:
+                        label: int = labelItem["label"]
+                        level: int = labelItem["level"]
+                        rate: float = labelItem["rate"]
+                        subLabelArray: list = labelItem["subLabels"]
+                        print("异常, taskId: %s, 分类: %s, 证据信息: %s" % (taskId, labelItem, evidence))
+            else:
+                print("未检测成功, status: %s" % status)
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

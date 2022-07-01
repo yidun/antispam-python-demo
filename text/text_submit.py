@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class TextSubmitAPIDemo(object):
     """调用易盾反垃圾云服务审核系统文本批量提交接口示例代码"""
 
-    API_URL = "http://as.dun.163.com/v1/text/submit"
-    VERSION = "v1"
+    API_URL = "http://as.dun.163.com/v5/text/submit"
+    VERSION = "v5"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -89,12 +89,12 @@ if __name__ == "__main__":
     texts: list = []
     text1 = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "易盾测试内容! v1接口!",
+        "content": "易盾测试内容! v5接口!",
         "action": "0"
     }
     text2 = {
         "dataId": "ebfcad1c-dba1-490c-b4de-e784c2691768",
-        "content": "批量提交内容! v1接口!",
+        "content": "批量提交内容! v5接口!",
         "action": "1"
     }
     texts.append(text1)

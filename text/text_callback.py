@@ -24,8 +24,8 @@ from gmssl import sm3, func
 class TextCallbackAPIDemo(object):
     """文本离线检测结果获取接口示例代码"""
     
-    API_URL = "http://as.dun.163.com/v3/text/callback/results"
-    VERSION = "v3.1"
+    API_URL = "http://as.dun.163.com/v5/text/callback/results"
+    VERSION = "v5.2"
 
     def __init__(self, secret_id, secret_key, business_id):
         """
@@ -93,18 +93,30 @@ if __name__ == "__main__":
         if len(resultArray) == 0:
             print("暂时没有人工复审结果需要获取, 请稍后重试!")
         for result in resultArray:
-            action: int = result["action"]
-            taskId: str = result["taskId"]
-            callback: str = result["callback"]
-            labelArray: list = result["labels"]
+            antispam: dict = result["antispam"]
+            taskId: str = antispam["taskId"]
+            dataId: str = antispam["dataId"]
+            suggestion: int = antispam["suggestion"]
+            remark: str = antispam["remark"]
+            resultType: int = antispam["resultType"]
+            callback: str = antispam["callback"]
+            censorType: int = antispam["censorType"]
+            censorSource: int = antispam["censorSource"]
+            censorRound: int = antispam["censorRound"]
+            censorTime: int = antispam["censorTime"]
+            censorLabelArray: list = antispam["censorLabels"]
+            # for censorLabel in censorLabelArray:
+            #    code: str = censorLabel["code"]
+            #    desc: str = censorLabel["desc"]
+            isRelatedHit: bool = antispam["isRelatedHit"]
+            labelArray: list = antispam["labels"]
             # for labelItem in labelArray:
             #     label: int = labelItem["label"]
             #     level: int = labelItem["level"]
-            #     details: dict = labelItem["details"]
-            #     hintArray: list = labelItem["hint"]
-            if action == 0:
+            #     subLabelArray: list = labelItem["subLabels"]
+            if suggestion == 0:
                 print("taskId: %s, callback: %s, 文本人工复审结果: 通过" % (taskId, callback))
-            elif action == 2:
+            elif suggestion == 2:
                 print("taskId: %s, callback: %s, 文本人工复审结果: 不通过, 分类信息如下: %s" % (taskId, callback, labelArray))
     else:
         print("ERROR: code=%s, msg=%s" % (ret["code"], ret["msg"]))

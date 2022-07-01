@@ -19,7 +19,8 @@ http://dun.163.com
 │   └── liveaudio_check.py 直播语音在线检测提交接口演示
 ├── crawler 网站解决方案接口演示
 │   │── crawler_callback.py 网站解决方案检测结果获取接口演示
-│   └── crawler_submit.py 网站解决方案在线检测提交接口演示
+│   │── crawler_submit.py 网站解决方案在线检测提交接口演示
+│   └── crawler_job_submit.py 网站解决方案主站检测任务提交接口演示
 ├── filesolution 文档解决方案接口演示
 │   │── filesolution_callback.py 文档解决方案检测结果获取接口演示
 │   │── filesolution_query.py 文档解决方案结果查询接口演示
@@ -66,13 +67,25 @@ http://dun.163.com
 │   └── videosolution_submit.py 点播音视频解决方案在线检测提交接口演示
 ├── mediasolution 融媒体解决方案接口演示
 │   │── mediasolution_callback.py 融媒体解决方案离线结果获取接口演示
-│   └── mediasolution_submit.py 融媒体解决方案在线检测提交接口演示
+│   │── mediasolution_submit.py 融媒体解决方案在线检测提交接口演示
+│   └── mediasolution_query.py 融媒体解决方案结果查询接口演示
 ├── keyword 敏感词接口演示
 │   │── keyword_submit.py 敏感词提交接口演示
 │   │── keyword_delete.py 敏感词删除接口演示
 │   └── keyword_query.py 敏感词查询接口演示
 ├── list 名单接口演示
-│   └── list_submit.py 名单提交接口演示
+│   │── list_submit.py 名单提交接口演示
+│   │── list_delete.py 名单删除接口演示
+│   │── list_query.py 名单查询接口演示
+│   └── list_update.py 名单修改接口演示
+├── digital 数字阅读解决方案接口演示
+│   │── digital_callback.py 数字阅读解决方案结果获取接口演示
+│   │── digital_submit.py 数字阅读解决方案检测提交接口演示
+│   └── digital_query.py 数字阅读解决方案结果查询接口演示
+├── report 投诉举报解决方案接口演示
+│   │── report_callback.py 投诉举报解决方案结果获取接口演示
+│   │── report_submit.py 投诉举报解决方案检测提交接口演示
+│   └── report_query.py 投诉举报解决方案结果查询接口演示
 └── README.md
 
 ```
