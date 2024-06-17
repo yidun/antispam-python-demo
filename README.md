@@ -6,6 +6,9 @@ http://dun.163.com
 - 文件说明
 
 ```
+├── aigc AIGC流式检测解决方案接口演示
+│   │── aigc_stream_callback.py AIGC流式检测解决方案检测结果获取接口演示
+│   └── aigc_stream_push.py AIGC流式检测解决方案提交接口演示
 ├── audio 语音接口演示
 │   │── audio_callback.py 点播语音检测结果获取接口演示
 │   │── audio_query.py 点播语音结果查询接口演示
