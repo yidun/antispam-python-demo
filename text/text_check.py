@@ -15,8 +15,8 @@ __version__ = '0.2-dev'
 import hashlib
 import time
 import random
-import urllib.request as urlrequest
-import urllib.parse as urlparse
+import urllib3
+from urllib.parse import urlencode
 import json
 from gmssl import sm3, func
 
@@ -37,6 +37,7 @@ class TextCheckAPIDemo(object):
         self.secret_id = secret_id
         self.secret_key = secret_key
         self.business_id = business_id
+        self.http = urllib3.PoolManager()  # 初始化连接池
 
     def gen_signature(self, params=None):
         """生成签名信息
@@ -69,10 +70,16 @@ class TextCheckAPIDemo(object):
         # params["signatureMethod"] = "SM3"  # 签名方法，默认MD5，支持SM3
         params["signature"] = self.gen_signature(params)
 
-        try:
-            params = urlparse.urlencode(params).encode("utf8")
-            request = urlrequest.Request(self.API_URL, params)
-            content = urlrequest.urlopen(request, timeout=1).read()
+         try:
+            encoded_params = urlencode(params).encode("utf8")
+            response = self.http.request(
+                'POST',
+                self.API_URL,
+                body=encoded_params,
+                headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                timeout=urllib3.Timeout(connect=1.0, read=1.0)
+            )
+            content = response.data
             return json.loads(content)
         except Exception as ex:
             print("调用API接口失败:", str(ex))
