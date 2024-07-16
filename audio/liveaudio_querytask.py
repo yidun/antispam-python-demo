@@ -68,7 +68,7 @@ class LiveAudioCallbackAPIDemo(object):
         # params["signatureMethod"] = "SM3"  # 签名方法，默认MD5，支持SM3
         params["signature"] = self.gen_signature(params)
 
-         try:
+        try:
             encoded_params = urlencode(params).encode("utf8")
             response = self.http.request(
                 'POST',

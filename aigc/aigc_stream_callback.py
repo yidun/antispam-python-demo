@@ -65,7 +65,7 @@ class AigcStreamCallbackAPIDemo(object):
         params["signatureMethod"] = "MD5"
         params["signature"] = self.gen_signature(params)
 
-         try:
+        try:
             encoded_params = urlencode(params).encode("utf8")
             response = self.http.request(
                 'POST',
